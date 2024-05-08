@@ -3,6 +3,9 @@ name: Run test_negative function
 on:
   workflow_dispatch:
     inputs:
+      TEST_FILTER:
+        description: target branch name
+        default: 'TestAddition.test_negative'
   push:
     branches:
       - main
