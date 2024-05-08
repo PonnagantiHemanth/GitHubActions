@@ -1,6 +1,11 @@
 import unit
 import unittest
 import tkinter as tk
+import subprocess
+import os
+
+path = [r"C:\Users\hponnaganti\Documents\project2"]
+os.chdir(path[0])
 
 class DynamicTestGeneration(unittest.TestCase):
     pass
