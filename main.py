@@ -6,7 +6,7 @@ import time
 
 
 def add_tests_to_filter(selected_tests):
-    with open("testfilter.txt", "w  ") as file:
+    with open("testfilter.txt", "w") as file:
         file.write('\n'.join(selected_tests))
 
 
