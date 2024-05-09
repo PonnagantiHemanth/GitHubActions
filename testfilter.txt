@@ -1,2 +1,1 @@
-test_list_concatenation
-test_positive
+test_zero
