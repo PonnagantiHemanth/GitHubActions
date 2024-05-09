@@ -1,54 +1,55 @@
 import unit
-import unittest
 import tkinter as tk
 import subprocess
 import os
+import time
 
-# path = [r"C:\Users\hponnaganti\Documents\project2"]
-# os.chdir(path[0])
 
-# class DynamicTestGeneration(unittest.TestCase):
-#     pass
-#
-# def add_test_method(test_name):
-#     def test_method(self):
-#         getattr(unit.TestAddition, test_name)(self)
-#     return test_method
-#
-# def run_selected_tests(selected_tests):
-#     suite = unittest.TestSuite()
-#     for test_name in selected_tests:
-#         test_method = add_test_method(test_name)
-#         setattr(DynamicTestGeneration, "test_" + test_name, test_method)
-#         suite.addTest(DynamicTestGeneration("test_" + test_name))
-#     unittest.TextTestRunner().run(suite)
-#
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write('\n'.join(selected_tests))
 
-root = tk.Tk()
-root.title("Select Tests to Run")
-root.configure(bg="#f0f0ff")  # Set background color
 
-checkbox_vars = []
-tests_run = False
+def print_result(results):
+    if results.returncode == 0:
+        print(results.stdout)
+    else:
+        print('Git command failed:')
+        print(results.stderr)
 
-def run_tests():
-    global tests_run
+
+def run_selected_tests(selected_tests):
+    suite = unittest.TestSuite()
+    for test_name in selected_tests:
+        test_method = getattr(unit.TestAddition, test_name)
+        test_instance = unit.TestAddition()
+        suite.addTest(
+            unittest.FunctionTestCase(test_method, setUp=test_instance.setUp, tearDown=test_instance.tearDown))
+    unittest.TextTestRunner().run(suite)
+
+
+def add_tests():
     selected_tests = []
     for var, test_name in checkbox_vars:
         if var.get():
             selected_tests.append(test_name)
-    # add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
-    run_selected_tests(selected_tests)
-    tests_run = True
+    add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
 
-def on_closing():
-    global tests_run
-    if not tests_run:
-        run_tests()
-    root.destroy()
+    # Git commands
+    path = r"C:\Users\hponnaganti\Documents\UI\project2"
+    os.chdir(path)
+    git_commands = [
+        'git status',
+        'git add --all',
+        'git commit -m "Ci Test"',
+        'git push origin perso/hemanth/UI'  # Assuming perso/hemanth/UI is your branch name
+    ]
+
+    for command in git_commands:
+        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print_result(result)
+        time.sleep(2)
+
 
 def create_checkboxes():
     test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
@@ -57,9 +58,15 @@ def create_checkboxes():
         checkbox = tk.Checkbutton(root, text=test_name, variable=var)
         checkbox.pack(anchor='w')
         checkbox_vars.append((var, test_name))
-#
-run_button = tk.Button(root, text="Run Selected Tests", command=run_tests)
+
+
+root = tk.Tk()
+root.title("Select Tests to Add to Filter")
+root.configure(bg="#f0f0ff")  # Set background color
+
+checkbox_vars = []
+
+run_button = tk.Button(root, text="Add Selected Tests to Filter and Push to Git", command=add_tests)
 run_button.pack(side="bottom", pady=10)  # Position button at the bottom
 create_checkboxes()
-root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
