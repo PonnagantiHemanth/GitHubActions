@@ -1,0 +1,22 @@
+name: Run test_negative function
+
+on:
+  workflow_dispatch:
+    inputs:
+      TEST_FILTER:
+        description: target branch name
+        default: 'TestAddition.test_negative'
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: python main.py
+        run: python main.py
