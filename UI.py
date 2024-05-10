@@ -26,6 +26,15 @@ def add_tests(repo):
 
         path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
 
+        # Check for uncommitted changes in testfilter.txt
+        status_command = "git status --porcelain testfilter.txt"
+        status_output = subprocess.run(status_command, shell=True, capture_output=True, text=True)
+        if status_output.stdout:
+            # Uncommitted changes found, commit them
+            commit_command = "git add testfilter.txt && git commit -m 'Committing changes before switching branches'"
+            subprocess.run(commit_command, shell=True)
+
+        # Define Git commands
         if repo == "main":
             git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin main']
         elif repo == "perso/hemanth/UI":
