@@ -3,6 +3,7 @@ import subprocess
 import os
 import time
 import unit
+
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
@@ -24,8 +25,15 @@ def add_tests(repo):
         add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
         # Change directory to the project directory
         path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
-        # Define Git commands
-        git_command = ['git status', "git add --all", "git commit -m \"Ci Test\"", "git push origin perso/hemanth/UI"]
+        # Define Git commands based on the selected repository
+        if repo == "main":
+            git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin main']
+        elif repo == "perso/hemanth/UI":
+            git_command = ['git checkout perso/hemanth/UI', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin perso/hemanth/UI']
+        else:
+            print("Invalid repository choice")
+            return
+
         # Execute Git commands
         for command in git_command:
             print(command)
@@ -58,7 +66,7 @@ create_checkboxes()
 
 # Create a dropdown menu for selecting repositories
 repo_var = tk.StringVar(root)
-repos = ["main","perso/hemanth/UI"]  # List of available repositories
+repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
 repo_dropdown.pack()
