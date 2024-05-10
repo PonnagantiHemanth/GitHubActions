@@ -1,14 +1,12 @@
-import unit
 import tkinter as tk
 import subprocess
 import os
 import time
-
-
+import unit
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
-        file.write('\n'.join(selected_tests))
-
+        file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
+    print("Selected tests added to the filter successfully.")
 
 def print_result(results):
     if results.returncode == 0:
@@ -17,39 +15,25 @@ def print_result(results):
         print('Git command failed:')
         print(results.stderr)
 
-
-def run_selected_tests(selected_tests):
-    suite = unittest.TestSuite()
-    for test_name in selected_tests:
-        test_method = getattr(unit.TestAddition, test_name)
-        test_instance = unit.TestAddition()
-        suite.addTest(
-            unittest.FunctionTestCase(test_method, setUp=test_instance.setUp, tearDown=test_instance.tearDown))
-    unittest.TextTestRunner().run(suite)
-
-
-def add_tests():
+def add_tests(repo):
     selected_tests = []
     for var, test_name in checkbox_vars:
         if var.get():
             selected_tests.append(test_name)
-    add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
-
-    # Git commands
-    path = r"C:\Users\hponnaganti\Documents\UI\project2"
-    os.chdir(path)
-    git_commands = [
-        'git status',
-        'git add --all',
-        'git commit -m "Ci Test"',
-        'git push origin perso/hemanth/UI'  # Assuming perso/hemanth/UI is your branch name
-    ]
-
-    for command in git_commands:
-        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        print_result(result)
-        time.sleep(2)
-
+    if selected_tests:
+        add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
+        # Change directory to the project directory
+        path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
+        # Define Git commands
+        git_command = ['git status', "git add --all", "git commit -m \"Ci Test\"", "git push origin perso/hemanth/UI"]
+        # Execute Git commands
+        for command in git_command:
+            print(command)
+            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            print_result(result)
+            time.sleep(2)
+    else:
+        print("No tests selected.")
 
 def create_checkboxes():
     test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
@@ -59,6 +43,9 @@ def create_checkboxes():
         checkbox.pack(anchor='w')
         checkbox_vars.append((var, test_name))
 
+def select_repo():
+    repo = repo_var.get()
+    add_tests(repo)
 
 root = tk.Tk()
 root.title("Select Tests to Add to Filter")
@@ -66,7 +53,18 @@ root.configure(bg="#f0f0ff")  # Set background color
 
 checkbox_vars = []
 
-run_button = tk.Button(root, text="Add Selected Tests to Filter and Push to Git", command=add_tests)
-run_button.pack(side="bottom", pady=10)  # Position button at the bottom
+# Create checkboxes for selecting tests
 create_checkboxes()
+
+# Create a dropdown menu for selecting repositories
+repo_var = tk.StringVar(root)
+repos = ["main","perso/hemanth/UI"]  # List of available repositories
+repo_var.set(repos[0])  # Set the default repository
+repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
+repo_dropdown.pack()
+
+# Add a button to add selected tests and push to the selected repository
+run_button = tk.Button(root, text="Add Selected Tests to Filter and Push to Git", command=select_repo)
+run_button.pack(side="bottom", pady=10)  # Position button at the bottom
+
 root.mainloop()
