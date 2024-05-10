@@ -22,10 +22,10 @@ def add_tests(repo):
         if var.get():
             selected_tests.append(test_name)
     if selected_tests:
-        add_tests_to_filter(selected_tests)
-
+        add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
+        # Change directory to the project directory
         path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
-
+        # Define Git commands based on the selected repository
         if repo == "main":
             git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin main']
         elif repo == "perso/hemanth/UI":
@@ -72,7 +72,7 @@ repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
 repo_dropdown.pack()
 
 # Add a button to add selected tests and push to the selected repository
-run_button = tk.Button(root, text="Add Selected Tests ", command=select_repo)
+run_button = tk.Button(root, text="Add Selected Tests to Filter and Push to Git", command=select_repo)
 run_button.pack(side="bottom", pady=10)  # Position button at the bottom
 
 root.mainloop()
