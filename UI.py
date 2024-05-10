@@ -24,7 +24,7 @@ def add_tests(repo):
     if selected_tests:
         add_tests_to_filter(selected_tests)
 
-        path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
+        path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
 
         # Check for uncommitted changes in testfilter.txt
         status_command = "git status --porcelain testfilter.txt"
@@ -46,7 +46,7 @@ def add_tests(repo):
         # Execute Git commands
         for command in git_command:
             print(command)
-            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            result = subprocess.run(command, shell=True, cwd=path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             print_result(result)
             time.sleep(2)
     else:
