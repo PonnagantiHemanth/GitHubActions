@@ -19,6 +19,14 @@ def print_result(results):
         print(results.stderr)
 
 
+def commit_changes(file):
+    # Commit changes to the specified file
+    git_add_command = f'git add {file}'
+    git_commit_command = f'git commit -m "Committing changes to {file} before branch switch"'
+    subprocess.run(git_add_command, shell=True)
+    subprocess.run(git_commit_command, shell=True)
+
+
 def add_tests(repo):
     selected_tests = []
     for var, test_name in checkbox_vars:
@@ -28,26 +36,40 @@ def add_tests(repo):
         add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
 
         # Change directory to the project directory
-        path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
-        os.chdir(path[0])
+        path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
+        os.chdir(path)
+
+        # Check if there are local changes that need to be committed before switching branches
+        git_status_command = 'git status'
+        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if "UI.py" in result.stdout:
+            print("Local changes detected in UI.py. Committing changes before switching branches...")
+            commit_changes("UI.py")
+        if "testfilter.txt" in result.stdout:
+            print("Local changes detected in testfilter.txt. Committing changes before switching branches...")
+            commit_changes("testfilter.txt")
+
+        # Check if there are changes to commit before pushing to the remote repository
+        git_commit_check_command = 'git diff-index --quiet HEAD'
+        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if commit_check_result.returncode != 0:
+            print("Changes detected. Committing changes before pushing...")
+            git_commit_command = 'git commit -am "Ci Test"'
+            subprocess.run(git_commit_command, shell=True)
 
         # Define Git commands based on the selected repository
         if repo == "main":
-            git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"',
-                           'git push origin main']
+            git_push_command = 'git push origin main'
         elif repo == "perso/hemanth/UI":
-            git_command = ['git checkout perso/hemanth/UI', 'git pull', 'git status', 'git add --all',
-                           'git commit -m "Ci Test"', 'git push origin perso/hemanth/UI']
+            git_push_command = 'git push origin perso/hemanth/UI'
         else:
             print("Invalid repository choice")
             return
 
-        # Execute Git commands
-        for command in git_command:
-            print(command)
-            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            print_result(result)
-            time.sleep(2)
+        # Execute Git push command
+        print(git_push_command)
+        push_result = subprocess.run(git_push_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        print_result(push_result)
     else:
         print("No tests selected.")
 
