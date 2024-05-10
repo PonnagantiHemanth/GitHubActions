@@ -66,7 +66,7 @@ create_checkboxes()
 
 # Create a dropdown menu for selecting repositories
 repo_var = tk.StringVar(root)
-repos = ["main", "perso/hemanth/UI","branch3"]  # List of available repositories
+repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
 repo_dropdown.pack()
