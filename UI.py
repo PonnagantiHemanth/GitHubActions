@@ -22,10 +22,10 @@ def add_tests(repo):
         if var.get():
             selected_tests.append(test_name)
     if selected_tests:
-        add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
-        # Change directory to the project directory
+        add_tests_to_filter(selected_tests)
+
         path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
-        # Define Git commands based on the selected repository
+
         if repo == "main":
             git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin main']
         elif repo == "perso/hemanth/UI":
