@@ -4,10 +4,12 @@ import os
 import time
 import unit
 
+
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
     print("Selected tests added to the filter successfully.")
+
 
 def print_result(results):
     if results.returncode == 0:
@@ -16,12 +18,6 @@ def print_result(results):
         print('Git command failed:')
         print(results.stderr)
 
-def commit_changes():
-    commit_message = "Ci Test"
-    git_add_command = "git add --all"
-    git_commit_command = f"git commit -m \"{commit_message}\""
-    subprocess.run(git_add_command, shell=True)
-    subprocess.run(git_commit_command, shell=True)
 
 def add_tests(repo):
     selected_tests = []
@@ -29,17 +25,19 @@ def add_tests(repo):
         if var.get():
             selected_tests.append(test_name)
     if selected_tests:
-        add_tests_to_filter(selected_tests)
-        commit_changes()  # Commit changes in testfilter.txt
-        commit_changes()  # Commit changes in UI.py
+        add_tests_to_filter(selected_tests)  # Update testfilter.txt with selected tests
 
-        path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
+        # Change directory to the project directory
+        path = [r"C:\Users\hponnaganti\Documents\UI\GitHubActions"]
+        os.chdir(path[0])
 
-        # Define Git commands
+        # Define Git commands based on the selected repository
         if repo == "main":
-            git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin main']
+            git_command = ['git checkout main', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"',
+                           'git push origin main']
         elif repo == "perso/hemanth/UI":
-            git_command = ['git checkout perso/hemanth/UI', 'git pull', 'git status', 'git add --all', 'git commit -m "Ci Test"', 'git push origin perso/hemanth/UI']
+            git_command = ['git checkout perso/hemanth/UI', 'git pull', 'git status', 'git add --all',
+                           'git commit -m "Ci Test"', 'git push origin perso/hemanth/UI']
         else:
             print("Invalid repository choice")
             return
@@ -47,11 +45,12 @@ def add_tests(repo):
         # Execute Git commands
         for command in git_command:
             print(command)
-            result = subprocess.run(command, shell=True, cwd=path, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             print_result(result)
             time.sleep(2)
     else:
         print("No tests selected.")
+
 
 def create_checkboxes():
     test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
@@ -61,9 +60,11 @@ def create_checkboxes():
         checkbox.pack(anchor='w')
         checkbox_vars.append((var, test_name))
 
+
 def select_repo():
     repo = repo_var.get()
     add_tests(repo)
+
 
 root = tk.Tk()
 root.title("Select Tests to Add to Filter")
