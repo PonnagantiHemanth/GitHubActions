@@ -16,6 +16,13 @@ def print_result(results):
         print('Git command failed:')
         print(results.stderr)
 
+def commit_changes():
+    commit_message = "Ci Test"
+    git_add_command = "git add --all"
+    git_commit_command = f"git commit -m \"{commit_message}\""
+    subprocess.run(git_add_command, shell=True)
+    subprocess.run(git_commit_command, shell=True)
+
 def add_tests(repo):
     selected_tests = []
     for var, test_name in checkbox_vars:
@@ -23,16 +30,10 @@ def add_tests(repo):
             selected_tests.append(test_name)
     if selected_tests:
         add_tests_to_filter(selected_tests)
+        commit_changes()  # Commit changes in testfilter.txt
+        commit_changes()  # Commit changes in UI.py
 
         path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
-
-        # Check for uncommitted changes in testfilter.txt
-        status_command = "git status --porcelain testfilter.txt"
-        status_output = subprocess.run(status_command, shell=True, capture_output=True, text=True)
-        if status_output.stdout:
-            # Uncommitted changes found, commit them
-            commit_command = "git add testfilter.txt && git commit -m 'Committing changes before switching branches'"
-            subprocess.run(commit_command, shell=True)
 
         # Define Git commands
         if repo == "main":
