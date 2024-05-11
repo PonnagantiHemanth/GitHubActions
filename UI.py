@@ -52,8 +52,17 @@ def add_tests(repo):
             print("Local changes detected in testfilter.txt. Committing changes before switching branches...")
             commit_changes("testfilter.txt")
 
+        # Check if there are changes to commit before pushing to the remote repository
+        git_commit_check_command = 'git diff-index --quiet HEAD'
+        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if commit_check_result.returncode != 0:
+            print("Changes detected. Committing changes before pushing...")
+            git_commit_command = 'git commit -am "Ci Test"'
+            subprocess.run(git_commit_command, shell=True)
+
         # Switch to the selected branch
-        subprocess.run(f'git checkout {repo}', shell=True)
+        git_checkout_command = f'git checkout {repo}'
+        subprocess.run(git_checkout_command, shell=True)
 
         # Push changes to the selected branch
         subprocess.run(f'git push origin {repo}', shell=True)
