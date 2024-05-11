@@ -64,6 +64,9 @@ def add_tests(repo):
         git_checkout_command = f'git checkout {repo}'
         subprocess.run(git_checkout_command, shell=True)
 
+        # Add a delay to allow for branch switching to take effect
+        time.sleep(5)  # Adjust the delay time as needed
+
         # Push changes to the selected branch
         subprocess.run(f'git push origin {repo}', shell=True)
 
