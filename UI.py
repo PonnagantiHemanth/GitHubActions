@@ -74,8 +74,11 @@ def add_tests(repo):
 
         print("Changes pushed successfully.")
 
-        # Automatically trigger button click event after completion
-        run_button.invoke()
+        # Automatically trigger button click event if the button was clicked manually and not clicked automatically yet
+        if button_clicked_manually and not button_clicked_automatically:
+            run_button.invoke()
+            # Set the flag to indicate that automatic click has been triggered
+            button_clicked_automatically = True
 
     else:
         print("No tests selected.")
@@ -93,6 +96,12 @@ def create_checkboxes():
 def select_repo():
     repo = repo_var.get()
     add_tests(repo)
+
+
+def manual_click():
+    global button_clicked_manually
+    button_clicked_manually = True
+    select_repo()
 
 
 root = tk.Tk()
@@ -114,5 +123,13 @@ repo_dropdown.pack()
 # Add a button to add selected tests and push to the selected repository
 run_button = tk.Button(root, text="Add Selected Tests to Filter and Push to Git", command=select_repo)
 run_button.pack(side="bottom", pady=10)  # Position button at the bottom
+
+# Add a button for manual click
+manual_click_button = tk.Button(root, text="Manual Click", command=manual_click)
+manual_click_button.pack(side="bottom", pady=10)
+
+# Initialize the flag for manual button click and automatic button click
+button_clicked_manually = False
+button_clicked_automatically = False
 
 root.mainloop()
