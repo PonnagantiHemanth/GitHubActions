@@ -1,1 +1,1 @@
-['test_decimal_numbers', 'test_list_concatenation', 'test_negative', 'test_zero']
+['test_zero']
