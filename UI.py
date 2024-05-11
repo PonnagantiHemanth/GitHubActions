@@ -57,15 +57,12 @@ def add_tests(repo):
             git_commit_command = 'git commit -am "Ci Test"'
             subprocess.run(git_commit_command, shell=True)
 
-        # Define Git commands based on the selected repository
-        if repo == "main":
-            git_push_command = 'git push origin main'
-        elif repo == "perso/hemanth/UI":
-            git_push_command = 'git push origin perso/hemanth/UI'
-        else:
-            print("Invalid repository choice")
-            return
+        # Switch to the selected branch
+        git_checkout_command = f'git checkout {repo}'
+        subprocess.run(git_checkout_command, shell=True)
 
+        # Define Git push command
+        git_push_command = 'git push origin HEAD'
         # Execute Git push command
         print(git_push_command)
         push_result = subprocess.run(git_push_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
