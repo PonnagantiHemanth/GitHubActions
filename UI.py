@@ -9,6 +9,9 @@ def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
     print("Selected tests added to the filter successfully.")
+    # Stage and commit the changes for testfilter.txt
+    subprocess.run('git add testfilter.txt', shell=True)
+    subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
 
 
 def print_result(results):
@@ -17,6 +20,14 @@ def print_result(results):
     else:
         print('Git command failed:')
         print(results.stderr)
+
+
+def commit_changes(file):
+    # Commit changes to the specified file
+    git_add_command = f'git add {file}'
+    git_commit_command = f'git commit -m "Committing changes to {file} before branch switch"'
+    subprocess.run(git_add_command, shell=True)
+    subprocess.run(git_commit_command, shell=True)
 
 
 def add_tests(repo):
@@ -31,11 +42,15 @@ def add_tests(repo):
         path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
         os.chdir(path)
 
-        # Stage all changes
-        subprocess.run('git add .', shell=True)
-
-        # Commit changes
-        subprocess.run('git commit -m "Update test filter"', shell=True)
+        # Check if there are local changes that need to be committed before switching branches
+        git_status_command = 'git status'
+        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if "UI.py" in result.stdout:
+            print("Local changes detected in UI.py. Committing changes before switching branches...")
+            commit_changes("UI.py")
+        if "testfilter.txt" in result.stdout:
+            print("Local changes detected in testfilter.txt. Committing changes before switching branches...")
+            commit_changes("testfilter.txt")
 
         # Switch to the selected branch
         subprocess.run(f'git checkout {repo}', shell=True)
