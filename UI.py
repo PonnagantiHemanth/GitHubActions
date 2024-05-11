@@ -44,7 +44,8 @@ def add_tests(repo):
 
         # Check if there are local changes that need to be committed before switching branches
         git_status_command = 'git status'
-        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True)
         if "UI.py" in result.stdout:
             print("Local changes detected in UI.py. Committing changes before switching branches...")
             commit_changes("UI.py")
@@ -54,7 +55,8 @@ def add_tests(repo):
 
         # Check if there are changes to commit before pushing to the remote repository
         git_commit_check_command = 'git diff-index --quiet HEAD'
-        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE,
+                                             stderr=subprocess.PIPE, text=True)
         if commit_check_result.returncode != 0:
             print("Changes detected. Committing changes before pushing...")
             git_commit_command = 'git commit -am "Ci Test"'
@@ -71,6 +73,10 @@ def add_tests(repo):
         subprocess.run(f'git push origin {repo}', shell=True)
 
         print("Changes pushed successfully.")
+
+        # Automatically trigger button click event after completion
+        run_button.invoke()
+
     else:
         print("No tests selected.")
 
