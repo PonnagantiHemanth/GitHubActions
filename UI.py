@@ -19,14 +19,6 @@ def print_result(results):
         print(results.stderr)
 
 
-def commit_changes(file):
-    # Commit changes to the specified file
-    git_add_command = f'git add {file}'
-    git_commit_command = f'git commit -m "Committing changes to {file} before branch switch"'
-    subprocess.run(git_add_command, shell=True)
-    subprocess.run(git_commit_command, shell=True)
-
-
 def add_tests(repo):
     selected_tests = []
     for var, test_name in checkbox_vars:
@@ -39,37 +31,19 @@ def add_tests(repo):
         path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
         os.chdir(path)
 
-        # Check if there are local changes that need to be committed before switching branches
-        git_status_command = 'git status'
-        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if "UI.py" in result.stdout:
-            print("Local changes detected in UI.py. Committing changes before switching branches...")
-            commit_changes("UI.py")
-        if "testfilter.txt" in result.stdout:
-            print("Local changes detected in testfilter.txt. Committing changes before switching branches...")
-            commit_changes("testfilter.txt")
+        # Stage all changes
+        subprocess.run('git add .', shell=True)
 
-        # Check if there are changes to commit before pushing to the remote repository
-        git_commit_check_command = 'git diff-index --quiet HEAD'
-        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if commit_check_result.returncode != 0:
-            print("Changes detected. Committing changes before pushing...")
-            git_commit_command = 'git commit -am "Ci Test"'
-            subprocess.run(git_commit_command, shell=True)
+        # Commit changes
+        subprocess.run('git commit -m "Update test filter"', shell=True)
 
         # Switch to the selected branch
-        git_checkout_command = f'git checkout {repo}'
-        subprocess.run(git_checkout_command, shell=True)
+        subprocess.run(f'git checkout {repo}', shell=True)
 
-        # Introduce a delay to ensure that the branch switch operation completes before pushing
-        time.sleep(1)
+        # Push changes to the selected branch
+        subprocess.run(f'git push origin {repo}', shell=True)
 
-        # Define Git push command
-        git_push_command = 'git push origin HEAD'
-        # Execute Git push command
-        print(git_push_command)
-        push_result = subprocess.run(git_push_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        print_result(push_result)
+        print("Changes pushed successfully.")
     else:
         print("No tests selected.")
 
