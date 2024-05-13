@@ -208,6 +208,11 @@ repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
 repo_dropdown.pack(pady=5)
 
+
+# Add a button to add selected tests and push to the selected repository
+run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
+run_button.pack(pady=5)
+
 # Entry fields for entering URL and branch name
 url_entry = tk.Entry(frame2, width=50)
 url_entry.pack(pady=5)
@@ -216,9 +221,6 @@ branch_entry.pack(pady=5)
 
 
 
-# Add a button to add selected tests and push to the selected repository
-run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
-run_button.pack(pady=5)
 
 # Bind the Enter key to the search function
 branch_entry.bind("<Return>", lambda event: search_url())
