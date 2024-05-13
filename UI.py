@@ -1,4 +1,11 @@
 import tkinter as tk
+from tkinter import messagebox
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import subprocess
 import os
 import time
@@ -14,14 +21,6 @@ def add_tests_to_filter(selected_tests):
     subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
 
 
-def print_result(results):
-    if results.returncode == 0:
-        print(results.stdout)
-    else:
-        print('Git command failed:')
-        print(results.stderr)
-
-
 def commit_changes(file):
     # Commit changes to the specified file
     git_add_command = f'git add {file}'
@@ -30,7 +29,7 @@ def commit_changes(file):
     subprocess.run(git_commit_command, shell=True)
 
 
-def add_tests(repo):
+def add_tests_and_push():
     selected_tests = []
     for var, test_name in checkbox_vars:
         if var.get():
@@ -62,14 +61,8 @@ def add_tests(repo):
             git_commit_command = 'git commit -am "Ci Test"'
             subprocess.run(git_commit_command, shell=True)
 
-        # Switch to the selected branch
-        git_checkout_command = f'git checkout {repo}'
-        subprocess.run(git_checkout_command, shell=True)
-
-        # Add a delay to allow for branch switching to take effect
-        time.sleep(10)  # Adjust the delay time as needed
-
         # Push changes to the selected branch
+        repo = repo_var.get()
         subprocess.run(f'git push origin {repo}', shell=True)
 
         print("Changes pushed successfully.")
@@ -84,24 +77,107 @@ def add_tests(repo):
         print("No tests selected.")
 
 
-def create_checkboxes():
-    test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
-    for test_name in test_names:
-        var = tk.BooleanVar()
-        checkbox = tk.Checkbutton(root, text=test_name, variable=var)
-        checkbox.pack(anchor='w')
-        checkbox_vars.append((var, test_name))
+def search_url():
+    url = url_entry.get()
+    branch_name = branch_entry.get()  # Get the branch name entered by the user
 
+    if not url:
+        messagebox.showerror("Error", "Please enter a URL.")
+        return
+    if not branch_name:
+        messagebox.showerror("Error", "Please enter a branch name.")
+        return
 
-def select_repo():
-    repo = repo_var.get()
-    add_tests(repo)
+    # Function to open the link and click on the "Actions" tab
+    def open_and_click_actions_tab(url):
+        # Configure Chrome options
+        options = Options()
+        options.headless = True  # Run Chrome in headless mode (no GUI)
 
+        driver = webdriver.Chrome(options=options)
 
-def manual_click():
-    global button_clicked_manually
-    button_clicked_manually = True
-    select_repo()
+        driver.get(url)
+
+        driver.maximize_window()
+
+        time.sleep(5)  # Adjust the wait time as needed
+
+        actions_tab_element = driver.find_element(By.ID, 'actions-tab')
+        actions_tab_element.click()
+
+        time.sleep(5)
+
+        try:
+            driver.execute_script("document.querySelector('a[href^=\"/login?\"]').click();")
+
+            username_field = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "login_field"))
+            )
+
+            # Fill the username field
+            username_field.send_keys("hemanthponnaganti1@gmail.com")
+
+            # Add a delay to allow the username to be filled
+            time.sleep(2)
+
+            # Find and fill the password field
+            password_field = driver.find_element(By.ID, "password")
+            password_field.send_keys("ponna@123")  # Replace with your password
+
+            # Wait for the sign in button to be clickable
+            sign_in_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
+            )
+
+            # Click the sign in button
+            sign_in_button.click()
+
+            # Add a delay for the sign-in process
+            time.sleep(8)
+
+            # Click the "Actions" tab again
+            actions_tab_element = driver.find_element(By.ID, 'actions-tab')
+            actions_tab_element.click()
+            time.sleep(5)  # Add a delay for the tab switch to complete
+
+            # Click the "Run Tests" link
+            run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
+            run_tests_link.click()
+            time.sleep(7)  # Add a delay for the new page to load
+
+            # Click the "Run workflow" button
+            run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
+            run_workflow_button.click()
+            time.sleep(7)  # Add a delay for the action to complete
+
+            # Click the "Branch" dropdown using CSS selector
+            branch_dropdown = driver.find_element(By.CSS_SELECTOR,
+                                                   'summary[data-view-component="true"] span[data-menu-button]')
+            branch_dropdown.click()
+            time.sleep(5)  # Add a delay for the dropdown to open
+
+            # Enter the branch name in the input field
+            branch_input = driver.find_element(By.ID, 'context-commitish-filter-field')
+            branch_input.send_keys(branch_name)
+            time.sleep(2)  # Add a delay for the branch name to be entered
+
+            # Press Enter to confirm the branch selection
+            branch_input.send_keys(Keys.RETURN)
+            time.sleep(5)  # Add a delay for the branch selection to be applied
+
+            # Click the "Run workflow" button
+            run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
+            run_workflow_button.click()
+            time.sleep(80)  # Add a delay for the action to complete
+
+        except Exception as e:
+            print("Failed to click the buttons:", e)
+
+        # Close the ChromeDriver instance
+        driver.quit()
+
+    # Example usage
+    open_and_click_actions_tab(url)
 
 
 root = tk.Tk()
@@ -111,7 +187,12 @@ root.configure(bg="#f0f0ff")  # Set background color
 checkbox_vars = []
 
 # Create checkboxes for selecting tests
-create_checkboxes()
+unit_test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
+for test_name in unit_test_names:
+    var = tk.BooleanVar()
+    checkbox = tk.Checkbutton(root, text=test_name, variable=var)
+    checkbox.pack(anchor='w')
+    checkbox_vars.append((var, test_name))
 
 # Create a dropdown menu for selecting repositories
 repo_var = tk.StringVar(root)
@@ -121,8 +202,21 @@ repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
 repo_dropdown.pack()
 
 # Add a button to add selected tests and push to the selected repository
-run_button = tk.Button(root, text="Select Tests", command=select_repo)
+run_button = tk.Button(root, text="Select Tests and Push", command=add_tests_and_push)
 run_button.pack(side="bottom", pady=10)  # Position button at the bottom
+
+# Entry fields for entering URL and branch name
+url_entry = tk.Entry(root, width=50)
+url_entry.pack(pady=5)
+branch_entry = tk.Entry(root, width=50)
+branch_entry.pack(pady=5)
+
+# Bind the Enter key to the search function
+branch_entry.bind("<Return>", lambda event: search_url())
+
+# Create a button to trigger the search
+search_button = tk.Button(root, text="Search", command=search_url)
+search_button.pack(pady=5)
 
 button_clicked_manually = False
 
