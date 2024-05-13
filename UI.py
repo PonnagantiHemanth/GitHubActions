@@ -121,7 +121,7 @@ repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
 repo_dropdown.pack()
 
 # Add a button to add selected tests and push to the selected repository
-run_button = tk.Button(root, text="Add Selected Tests to Filter and Push to Git", command=select_repo)
+run_button = tk.Button(root, text="Select Tests", command=select_repo)
 run_button.pack(side="bottom", pady=10)  # Position button at the bottom
 
 # Initialize the flag for manual button click
