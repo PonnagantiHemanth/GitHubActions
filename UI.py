@@ -105,7 +105,7 @@ def manual_click():
 
 
 root = tk.Tk()
-root.title("Select Tests to Add to Filter")
+root.title("Ui")
 root.configure(bg="#f0f0ff")  # Set background color
 
 checkbox_vars = []
@@ -124,7 +124,6 @@ repo_dropdown.pack()
 run_button = tk.Button(root, text="Select Tests", command=select_repo)
 run_button.pack(side="bottom", pady=10)  # Position button at the bottom
 
-# Initialize the flag for manual button click
 button_clicked_manually = False
 
 root.mainloop()
