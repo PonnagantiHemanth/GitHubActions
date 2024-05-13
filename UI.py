@@ -184,40 +184,52 @@ root = tk.Tk()
 root.title("Ui")
 root.configure(bg="#f0f0ff")  # Set background color
 
+# Create a frame for the first UI section containing checkboxes
+frame1 = tk.Frame(root, bg="#f0f0ff")
+frame1.pack(pady=10)
+
 checkbox_vars = []
 
 # Create checkboxes for selecting tests
 unit_test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
 for test_name in unit_test_names:
     var = tk.BooleanVar()
-    checkbox = tk.Checkbutton(root, text=test_name, variable=var)
+    checkbox = tk.Checkbutton(frame1, text=test_name, variable=var)
     checkbox.pack(anchor='w')
     checkbox_vars.append((var, test_name))
 
-# Create a dropdown menu for selecting repositories
-repo_var = tk.StringVar(root)
+# Create a frame for the second UI section containing entry fields and branch dropdown
+frame2 = tk.Frame(root, bg="#f0f0ff")
+frame2.pack(pady=10)
+
+repo_var = tk.StringVar(frame2)
 repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
-repo_dropdown = tk.OptionMenu(root, repo_var, *repos)
-repo_dropdown.pack()
-
-# Add a button to add selected tests and push to the selected repository
-run_button = tk.Button(root, text="Select Tests and Push", command=add_tests_and_push)
-run_button.pack(side="bottom", pady=10)  # Position button at the bottom
+repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
+repo_dropdown.pack(pady=5)
 
 # Entry fields for entering URL and branch name
-url_entry = tk.Entry(root, width=50)
+url_entry = tk.Entry(frame2, width=50)
 url_entry.pack(pady=5)
-branch_entry = tk.Entry(root, width=50)
+branch_entry = tk.Entry(frame2, width=50)
 branch_entry.pack(pady=5)
+
+
+
+# Add a button to add selected tests and push to the selected repository
+run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
+run_button.pack(pady=5)
 
 # Bind the Enter key to the search function
 branch_entry.bind("<Return>", lambda event: search_url())
 
 # Create a button to trigger the search
-search_button = tk.Button(root, text="Search", command=search_url)
+search_button = tk.Button(frame2, text="Search", command=search_url)
 search_button.pack(pady=5)
 
 button_clicked_manually = False
+
+
+
 
 root.mainloop()
