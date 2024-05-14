@@ -217,4 +217,5 @@ run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push, bg
 run_button.pack(pady=5)
 
 button_clicked_manually = False
+
 root.mainloop()
