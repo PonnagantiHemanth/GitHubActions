@@ -77,15 +77,14 @@ def add_tests_and_push():
             run_button.invoke()
 
         # Call function to automate web interaction
-        search_url()
+        search_url(repo)
 
     else:
         print("No tests selected.")
 
 
-def search_url():
+def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
-    branch_name = "main"  # The branch name is constant
 
     # Function to open the link and click on the "Actions" tab
     def open_and_click_actions_tab():
