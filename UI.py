@@ -171,14 +171,14 @@ def search_url(branch_name):
         except Exception as e:
             print("Failed to click the buttons:", e)
 
-        # Close the ChromeDriver instance
-        #driver.quit()
+        driver.quit()
 
     # Example usage
     open_and_click_actions_tab()
 
 
 root = tk.Tk()
+root.geometry("500x500")
 root.title("UI for GitHub Actions")
 root.configure(bg="#f0f0ff")  # Set background color
 
