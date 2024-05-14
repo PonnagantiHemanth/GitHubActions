@@ -172,7 +172,7 @@ def search_url(branch_name):
             print("Failed to click the buttons:", e)
 
         # Close the ChromeDriver instance
-        driver.quit()
+        #driver.quit()
 
     # Example usage
     open_and_click_actions_tab()
