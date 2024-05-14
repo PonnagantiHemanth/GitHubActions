@@ -179,12 +179,16 @@ def search_url(branch_name):
 
 
 root = tk.Tk()
-root.title("Ui")
+root.title("UI for GitHub Actions")
 root.configure(bg="#f0f0ff")  # Set background color
+
+# Create a label for the checkbox section
+test_label = tk.Label(root, text="List of tests", bg="#f0f0ff", font=("Helvetica", 12, "bold"))
+test_label.pack(pady=5)
 
 # Create a frame for the first UI section containing checkboxes
 frame1 = tk.Frame(root, bg="#f0f0ff")
-frame1.pack(pady=10)
+frame1.pack(pady=5)
 
 checkbox_vars = []
 
@@ -192,7 +196,7 @@ checkbox_vars = []
 unit_test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
 for test_name in unit_test_names:
     var = tk.BooleanVar()
-    checkbox = tk.Checkbutton(frame1, text=test_name, variable=var)
+    checkbox = tk.Checkbutton(frame1, text=test_name, variable=var, bg="#f0f0ff", font=("Helvetica", 10))
     checkbox.pack(anchor='w')
     checkbox_vars.append((var, test_name))
 
@@ -201,16 +205,16 @@ frame2 = tk.Frame(root, bg="#f0f0ff")
 frame2.pack(pady=10)
 
 repo_var = tk.StringVar(frame2)
-repos = ["main", "Temp-Branch"]  # List of available repositories
+repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
+repo_dropdown.config(bg="#f0f0ff", font=("Helvetica", 10))
 repo_dropdown.pack(pady=5)
 
-
 # Add a button to add selected tests and push to the selected repository
-run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
+run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push, bg="#4CAF50", fg="white",
+                       font=("Helvetica", 10, "bold"))
 run_button.pack(pady=5)
-
 
 button_clicked_manually = False
 
