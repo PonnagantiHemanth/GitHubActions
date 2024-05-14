@@ -166,7 +166,7 @@ def search_url(branch_name):
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(80)  # Add a delay for the action to complete
+            # time.sleep(80)  # Add a delay for the action to complete
 
         except Exception as e:
             print("Failed to click the buttons:", e)
