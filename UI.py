@@ -76,6 +76,9 @@ def add_tests_and_push():
             button_clicked_manually = False  # Reset the flag
             run_button.invoke()
 
+        # Call function to automate web interaction
+        search_url()
+
     else:
         print("No tests selected.")
 
