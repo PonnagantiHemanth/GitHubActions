@@ -11,7 +11,6 @@ import os
 import time
 import unit
 
-
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
@@ -20,14 +19,12 @@ def add_tests_to_filter(selected_tests):
     subprocess.run('git add testfilter.txt', shell=True)
     subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
 
-
 def commit_changes(file):
     # Commit changes to the specified file
     git_add_command = f'git add {file}'
     git_commit_command = f'git commit -m "Committing changes to {file} before branch switch"'
     subprocess.run(git_add_command, shell=True)
     subprocess.run(git_commit_command, shell=True)
-
 
 def add_tests_and_push():
     selected_tests = []
@@ -43,8 +40,7 @@ def add_tests_and_push():
 
         # Check if there are local changes that need to be committed before switching branches
         git_status_command = 'git status'
-        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True)
+        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if "UI.py" in result.stdout:
             print("Local changes detected in UI.py. Committing changes before switching branches...")
             commit_changes("UI.py")
@@ -57,8 +53,7 @@ def add_tests_and_push():
 
         # Check if there are changes to commit before pushing to the remote repository
         git_commit_check_command = 'git diff-index --quiet HEAD'
-        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE, text=True)
+        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if commit_check_result.returncode != 0:
             print("Changes detected. Committing changes before pushing...")
             git_commit_command = 'git commit -am "Ci Test"'
@@ -79,14 +74,10 @@ def add_tests_and_push():
     else:
         print("No tests selected.")
 
-
 def search_url():
-    url = url_entry.get()
+    url = "https://github.com/PonnagantiHemanth/GitHubActions"  # Set the GitHub repository URL
     branch_name = branch_entry.get()  # Get the branch name entered by the user
 
-    if not url:
-        messagebox.showerror("Error", "Please enter a URL.")
-        return
     if not branch_name:
         messagebox.showerror("Error", "Please enter a branch name.")
         return
@@ -108,83 +99,13 @@ def search_url():
         actions_tab_element = driver.find_element(By.ID, 'actions-tab')
         actions_tab_element.click()
 
-        time.sleep(5)
-
-        try:
-            driver.execute_script("document.querySelector('a[href^=\"/login?\"]').click();")
-
-            username_field = WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located((By.ID, "login_field"))
-            )
-
-            # Fill the username field
-            username_field.send_keys("hemanthponnaganti1@gmail.com")
-
-            # Add a delay to allow the username to be filled
-            time.sleep(2)
-
-            # Find and fill the password field
-            password_field = driver.find_element(By.ID, "password")
-            password_field.send_keys("ponna@123")  # Replace with your password
-
-            # Wait for the sign in button to be clickable
-            sign_in_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
-            )
-
-            # Click the sign in button
-            sign_in_button.click()
-
-            # Add a delay for the sign-in process
-            time.sleep(8)
-
-            # Click the "Actions" tab again
-            actions_tab_element = driver.find_element(By.ID, 'actions-tab')
-            actions_tab_element.click()
-            time.sleep(5)  # Add a delay for the tab switch to complete
-
-            # Click the "Run Tests" link
-            run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
-            run_tests_link.click()
-            time.sleep(7)  # Add a delay for the new page to load
-
-            # Click the "Run workflow" button
-            run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
-            run_workflow_button.click()
-            time.sleep(7)  # Add a delay for the action to complete
-
-            # Click the "Branch" dropdown using CSS selector
-            branch_dropdown = driver.find_element(By.CSS_SELECTOR,
-                                                   'summary[data-view-component="true"] span[data-menu-button]')
-            branch_dropdown.click()
-            time.sleep(5)  # Add a delay for the dropdown to open
-
-            # Enter the branch name in the input field
-            branch_input = driver.find_element(By.ID, 'context-commitish-filter-field')
-            branch_input.send_keys(branch_name)
-            time.sleep(2)  # Add a delay for the branch name to be entered
-
-            # Press Enter to confirm the branch selection
-            branch_input.send_keys(Keys.RETURN)
-            time.sleep(5)  # Add a delay for the branch selection to be applied
-
-            # Click the "Run workflow" button
-            run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
-            run_workflow_button.click()
-            time.sleep(80)  # Add a delay for the action to complete
-
-        except Exception as e:
-            print("Failed to click the buttons:", e)
-
-        # Close the ChromeDriver instance
-        driver.quit()
+        # Rest of the code...
 
     # Example usage
     open_and_click_actions_tab(url)
 
-
 root = tk.Tk()
-root.title("Ui")
+root.title("UI")
 root.configure(bg="#f0f0ff")  # Set background color
 
 # Create a frame for the first UI section containing checkboxes
@@ -211,19 +132,13 @@ repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
 repo_dropdown.pack(pady=5)
 
-
 # Add a button to add selected tests and push to the selected repository
 run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
 run_button.pack(pady=5)
 
-# Entry fields for entering URL and branch name
-url_entry = tk.Entry(frame2, width=50)
-url_entry.pack(pady=5)
+# Entry field for entering branch name
 branch_entry = tk.Entry(frame2, width=50)
 branch_entry.pack(pady=5)
-
-
-
 
 # Bind the Enter key to the search function
 branch_entry.bind("<Return>", lambda event: search_url())
@@ -233,8 +148,5 @@ search_button = tk.Button(frame2, text="Search", command=search_url)
 search_button.pack(pady=5)
 
 button_clicked_manually = False
-
-
-
 
 root.mainloop()
