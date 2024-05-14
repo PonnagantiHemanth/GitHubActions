@@ -11,7 +11,6 @@ import os
 import time
 import unit
 
-
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
@@ -20,14 +19,12 @@ def add_tests_to_filter(selected_tests):
     subprocess.run('git add testfilter.txt', shell=True)
     subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
 
-
 def commit_changes(file):
     # Commit changes to the specified file
     git_add_command = f'git add {file}'
     git_commit_command = f'git commit -m "Committing changes to {file} before branch switch"'
     subprocess.run(git_add_command, shell=True)
     subprocess.run(git_commit_command, shell=True)
-
 
 def add_tests_and_push():
     selected_tests = []
@@ -61,6 +58,9 @@ def add_tests_and_push():
             git_commit_command = 'git commit -am "Ci Test"'
             subprocess.run(git_commit_command, shell=True)
 
+        # Pull changes from the remote branch
+        subprocess.run('git pull origin HEAD', shell=True)
+
         # Push changes to the selected branch
         repo = repo_var.get()
         subprocess.run(f'git push origin HEAD:{repo}', shell=True)  # Push to the selected branch
@@ -76,7 +76,6 @@ def add_tests_and_push():
     else:
         print("No tests selected.")
 
-
 def search_url():
     url = url_entry.get()
     branch_name = branch_entry.get()  # Get the branch name entered by the user
@@ -87,10 +86,6 @@ def search_url():
     if not branch_name:
         messagebox.showerror("Error", "Please enter a branch name.")
         return
-
-    # Update the dropdown selection to match the entered branch name
-    repo_var.set(branch_name)
-    print("Selected branch:", repo_var.get())  # Print the selected branch name
 
     # Function to open the link and click on the "Actions" tab
     def open_and_click_actions_tab(url):
@@ -183,7 +178,6 @@ def search_url():
     # Example usage
     open_and_click_actions_tab(url)
 
-
 root = tk.Tk()
 root.title("Ui")
 root.configure(bg="#f0f0ff")  # Set background color
@@ -211,6 +205,7 @@ repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
 repo_dropdown.pack(pady=5)
+
 
 # Add a button to add selected tests and push to the selected repository
 run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
