@@ -1,1 +1,1 @@
-['test_decimal_numbers', 'test_fibonacci_5', 'test_invalid_input', 'test_large_numbers', 'test_mixed_positive_negative', 'test_tuple_concatenation', 'test_zero']
+['test_positive']
