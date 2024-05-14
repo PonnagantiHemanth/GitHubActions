@@ -90,6 +90,7 @@ def search_url():
 
     # Update the dropdown selection to match the entered branch name
     repo_var.set(branch_name)
+    print("Selected branch:", repo_var.get())  # Print the selected branch name
 
     # Function to open the link and click on the "Actions" tab
     def open_and_click_actions_tab(url):
@@ -205,13 +206,6 @@ for test_name in unit_test_names:
 frame2 = tk.Frame(root, bg="#f0f0ff")
 frame2.pack(pady=10)
 
-# Entry fields for entering URL and branch name
-url_entry = tk.Entry(frame2, width=50)
-url_entry.pack(pady=5)
-branch_entry = tk.Entry(frame2, width=50)
-branch_entry.pack(pady=5)
-
-# Create a dropdown menu for selecting repositories
 repo_var = tk.StringVar(frame2)
 repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
@@ -221,6 +215,12 @@ repo_dropdown.pack(pady=5)
 # Add a button to add selected tests and push to the selected repository
 run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
 run_button.pack(pady=5)
+
+# Entry fields for entering URL and branch name
+url_entry = tk.Entry(frame2, width=50)
+url_entry.pack(pady=5)
+branch_entry = tk.Entry(frame2, width=50)
+branch_entry.pack(pady=5)
 
 # Bind the Enter key to the search function
 branch_entry.bind("<Return>", lambda event: search_url())
