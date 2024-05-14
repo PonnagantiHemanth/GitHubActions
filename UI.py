@@ -58,8 +58,8 @@ def add_tests_and_push():
             git_commit_command = 'git commit -am "Ci Test"'
             subprocess.run(git_commit_command, shell=True)
 
-        # Pull changes from the remote branch
-        subprocess.run('git pull origin HEAD', shell=True)
+        # Pull changes from the remote branch and rebase your local changes
+        subprocess.run('git pull --rebase origin HEAD', shell=True)
 
         # Push changes to the selected branch
         repo = repo_var.get()
@@ -205,7 +205,6 @@ repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
 repo_dropdown.pack(pady=5)
-
 
 # Add a button to add selected tests and push to the selected repository
 run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push)
