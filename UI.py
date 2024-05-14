@@ -66,7 +66,7 @@ def add_tests_and_push():
 
         # Push changes to the selected branch
         repo = repo_var.get()
-        subprocess.run(f'git push origin HEAD:{repo}', shell=True)  # Push to the selected branch
+        subprocess.run(f'git push origin HEAD:{repo} --force', shell=True)  # Force push to the selected branch
 
         print("Changes pushed successfully.")
 
