@@ -205,7 +205,7 @@ frame2 = tk.Frame(root, bg="#f0f0ff")
 frame2.pack(pady=10)
 
 repo_var = tk.StringVar(frame2)
-repos = ["main", "rr"]  # List of available repositories
+repos = ["main", "Temp-Branch"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
 repo_dropdown.config(bg="#f0f0ff", font=("Helvetica", 10))
