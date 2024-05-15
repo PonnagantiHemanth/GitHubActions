@@ -52,6 +52,10 @@ def add_tests_and_push():
             print("Local changes detected in testfilter.txt. Committing changes before switching branches...")
             commit_changes("testfilter.txt")
 
+        # Create a new branch
+        new_branch_name = input("Enter the name for the new branch: ")
+        subprocess.run(f'git checkout -b {new_branch_name}', shell=True)
+
         # Pull changes from the remote branch and rebase your local changes
         subprocess.run('git pull --rebase origin HEAD', shell=True)
 
@@ -166,11 +170,12 @@ def search_url(branch_name):
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            # time.sleep(80)  # Add a delay for the action to complete
+            time.sleep(80)  # Add a delay for the action to complete
 
         except Exception as e:
             print("Failed to click the buttons:", e)
 
+        # Close the ChromeDriver instance
         driver.quit()
 
     # Example usage
@@ -178,7 +183,6 @@ def search_url(branch_name):
 
 
 root = tk.Tk()
-root.geometry("500x500")
 root.title("UI for GitHub Actions")
 root.configure(bg="#f0f0ff")  # Set background color
 
@@ -205,7 +209,7 @@ frame2 = tk.Frame(root, bg="#f0f0ff")
 frame2.pack(pady=10)
 
 repo_var = tk.StringVar(frame2)
-repos = ["main", "Temp-Branch"]  # List of available repositories
+repos = ["main", "perso/hemanth/UI"]  # List of available repositories
 repo_var.set(repos[0])  # Set the default repository
 repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
 repo_dropdown.config(bg="#f0f0ff", font=("Helvetica", 10))
