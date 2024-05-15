@@ -1,16 +1,34 @@
 import tkinter as tk
-from tkinter import messagebox
+import subprocess
+import os
+import time
+import unit
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-import subprocess
-import os
-import time
-import unit
+import string
+import random
 
+def generate_random_branch_name():
+    """Generate a random branch name."""
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for _ in range(8))
+
+def create_branch(repo, branch_name):
+    """Create a new branch."""
+    subprocess.run(f'git checkout -b {branch_name}', shell=True)
+    subprocess.run('git push origin HEAD', shell=True)  # Push the new branch to GitHub
+
+def delete_branch(branch_name):
+    """Delete a branch."""
+    try:
+        subprocess.run(f'git push origin --delete {branch_name}', shell=True)  # Delete the branch from GitHub
+        subprocess.run(f'git branch -D {branch_name}', shell=True)  # Delete the branch locally
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to delete branch {branch_name}: {e}")
 
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
@@ -20,14 +38,12 @@ def add_tests_to_filter(selected_tests):
     subprocess.run('git add testfilter.txt', shell=True)
     subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
 
-
 def commit_changes(file):
     # Commit changes to the specified file
     git_add_command = f'git add {file}'
     git_commit_command = f'git commit -m "Committing changes to {file} before branch switch"'
     subprocess.run(git_add_command, shell=True)
     subprocess.run(git_commit_command, shell=True)
-
 
 def add_tests_and_push():
     selected_tests = []
@@ -77,11 +93,13 @@ def add_tests_and_push():
             run_button.invoke()
 
         # Call function to automate web interaction
-        search_url(repo)
+        new_branch_name = generate_random_branch_name()
+        create_branch(repo_var.get(), new_branch_name)
+        search_url(new_branch_name)
+        delete_branch(new_branch_name)
 
     else:
         print("No tests selected.")
-
 
 def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
