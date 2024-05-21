@@ -279,4 +279,4 @@ run_button.grid(row=4, column=0, columnspan=4, pady=10)
 
 button_clicked_manually = False
 root.geometry("1600x1050")
-root.mainloop() 
+root.mainloop()
