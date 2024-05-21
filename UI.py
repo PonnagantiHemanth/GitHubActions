@@ -34,7 +34,6 @@ def handle_rebase_conflict():
 
 def add_tests_and_push():
     selected_tests = []
-    origin_branch = "main"
     for var, test_name in checkbox_vars:
         if var.get():
             selected_tests.append(test_name)
@@ -85,20 +84,19 @@ def add_tests_and_push():
         # Push the new branch to the remote repository
         subprocess.run(f'git push origin {branch_name}', shell=True)
 
-        subprocess.run(f'git checkout {origin_branch}', shell=True)
         print("Changes pushed successfully.")
 
         # Automatically trigger button click event once after manual button click
-        # global button_clicked_manually
-        # if button_clicked_manually:
-        #     button_clicked_manually = False  # Reset the flag
-        #     run_button.invoke()
+        global button_clicked_manually
+        if button_clicked_manually:
+            button_clicked_manually = False  # Reset the flag
+            run_button.invoke()
 
         # Call function to automate web interaction
-        # search_url(branch_name)
+        search_url(branch_name)
 
         # Add function to delete the branch after the tests are completed
-        # delete_branch(branch_name)
+        delete_branch(branch_name)
 
     else:
         print("No tests selected.")
@@ -108,11 +106,30 @@ def delete_branch(branch_name):
     path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
     os.chdir(path)
 
-    # Delete the branch locally and remotely
-    subprocess.run(f'git branch -d {branch_name}', shell=True)
-    subprocess.run(f'git push origin --delete {branch_name}', shell=True)
+    try:
+        # Clean up the worktree by removing untracked files and discarding changes
+        subprocess.run('git clean -xdf', shell=True, check=True)
+        subprocess.run('git reset --hard HEAD', shell=True, check=True)
 
-    print(f"Branch {branch_name} deleted successfully.")
+        # Delete the branch locally (force delete)
+        delete_local_branch_command = f'git branch -D {branch_name}'
+        subprocess.run(delete_local_branch_command, shell=True, check=True)
+        print(f"Local branch {branch_name} deleted successfully.")
+
+        # Check if the branch still exists locally
+        check_local_branch_command = f'git show-ref --verify --quiet refs/heads/{branch_name}'
+        local_branch_exists = subprocess.run(check_local_branch_command, shell=True).returncode == 0
+
+        if not local_branch_exists:
+            # Push the deletion to the remote repository
+            delete_remote_branch_command = f'git push origin --delete {branch_name}'
+            subprocess.run(delete_remote_branch_command, shell=True, check=True)
+            print(f"Remote branch {branch_name} deleted successfully.")
+        else:
+            print(f"Error: Unable to delete remote branch {branch_name}. Local branch still exists.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error deleting branch {branch_name}: {e}")
 
 def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
@@ -150,29 +167,21 @@ def search_url(branch_name):
 
             # Find and fill the password field
             password_field = driver.find_element(By.ID, "password")
-            password_field.send_keys(password_entry.get())  # Use the password from entry
+            password_field.send_keys(password_entry.get())  # Retrieve password from the entry field
 
-            # Wait for the sign in button to be clickable
-            sign_in_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
-            )
+            # Add a delay to allow the password to be filled
+            time.sleep(2)
 
-            # Click the sign in button
-            sign_in_button.click()
+            # Submit the login form
+            password_field.send_keys(Keys.RETURN)
 
-            # Add a delay for the sign-in process
-            time.sleep(8)
+            # Wait for login to complete
+            time.sleep(5)
 
-            # Click the "Actions" tab again
-            actions_tab_element = driver.find_element(By.ID, 'actions-tab')
-            actions_tab_element.click()
-            time.sleep(5)  # Add a delay for the tab switch to complete
+        except Exception as e:
+            print("Failed to login:", e)
 
-            # Click the "Run Tests" link
-            run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
-            run_tests_link.click()
-            time.sleep(7)  # Add a delay for the new page to load
-
+        try:
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
             run_workflow_button.click()
@@ -195,7 +204,7 @@ def search_url(branch_name):
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(100)  # Add a delay for the action to complete
+            time.sleep(200)  # Add a delay for the action to complete
 
         except Exception as e:
             print("Failed to click the buttons:", e)
@@ -238,7 +247,7 @@ frame2 = tk.Frame(root, bg="#d9e5ff")
 frame2.pack()
 
 # Add a label for users to input their desired branch name
-branch_label = tk.Label(frame2, text="Test Bed", bg="#d9e5ff", font=("Helvetica", 12))
+branch_label = tk.Label(frame2, text="Branch Name", bg="#d9e5ff", font=("Helvetica", 12))
 branch_label.grid(row=1, column=0, pady=(30, 5), padx=10, sticky='w')  # Increased pady
 
 # Add an entry field for users to input branch name
@@ -246,7 +255,7 @@ branch_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10))
 branch_entry.grid(row=1, column=1, pady=(30, 5), padx=10, sticky='w')  # Increased pady and changed sticky to 'w'
 
 # Add a label for users to input their desired device name
-device_label = tk.Label(frame2, text="Patch NO", bg="#d9e5ff", font=("Helvetica", 12))
+device_label = tk.Label(frame2, text="Patch ID", bg="#d9e5ff", font=("Helvetica", 12))
 device_label.grid(row=0, column=2, pady=(10, 5), padx=10, sticky='e')
 
 # Add an entry field for users to input device name
