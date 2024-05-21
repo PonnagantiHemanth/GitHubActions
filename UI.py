@@ -34,6 +34,7 @@ def handle_rebase_conflict():
 
 def add_tests_and_push():
     selected_tests = []
+    origin_branch = "main"
     for var, test_name in checkbox_vars:
         if var.get():
             selected_tests.append(test_name)
@@ -84,19 +85,20 @@ def add_tests_and_push():
         # Push the new branch to the remote repository
         subprocess.run(f'git push origin {branch_name}', shell=True)
 
+        subprocess.run(f'git checkout {origin_branch}', shell=True)
         print("Changes pushed successfully.")
 
         # Automatically trigger button click event once after manual button click
-        global button_clicked_manually
-        if button_clicked_manually:
-            button_clicked_manually = False  # Reset the flag
-            run_button.invoke()
+        # global button_clicked_manually
+        # if button_clicked_manually:
+        #     button_clicked_manually = False  # Reset the flag
+        #     run_button.invoke()
 
         # Call function to automate web interaction
-        search_url(branch_name)
+        # search_url(branch_name)
 
         # Add function to delete the branch after the tests are completed
-        delete_branch(branch_name)
+        # delete_branch(branch_name)
 
     else:
         print("No tests selected.")
@@ -193,7 +195,7 @@ def search_url(branch_name):
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(200)  # Add a delay for the action to complete
+            time.sleep(100)  # Add a delay for the action to complete
 
         except Exception as e:
             print("Failed to click the buttons:", e)
@@ -236,7 +238,7 @@ frame2 = tk.Frame(root, bg="#d9e5ff")
 frame2.pack()
 
 # Add a label for users to input their desired branch name
-branch_label = tk.Label(frame2, text="Branch Name", bg="#d9e5ff", font=("Helvetica", 12))
+branch_label = tk.Label(frame2, text="Test Bed", bg="#d9e5ff", font=("Helvetica", 12))
 branch_label.grid(row=1, column=0, pady=(30, 5), padx=10, sticky='w')  # Increased pady
 
 # Add an entry field for users to input branch name
@@ -244,7 +246,7 @@ branch_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10))
 branch_entry.grid(row=1, column=1, pady=(30, 5), padx=10, sticky='w')  # Increased pady and changed sticky to 'w'
 
 # Add a label for users to input their desired device name
-device_label = tk.Label(frame2, text="Patch ID", bg="#d9e5ff", font=("Helvetica", 12))
+device_label = tk.Label(frame2, text="Patch NO", bg="#d9e5ff", font=("Helvetica", 12))
 device_label.grid(row=0, column=2, pady=(10, 5), padx=10, sticky='e')
 
 # Add an entry field for users to input device name
