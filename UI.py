@@ -11,7 +11,6 @@ import os
 import time
 import unit
 
-
 def add_tests_to_filter(selected_tests):
     with open("testfilter.txt", "w") as file:
         file.write("[" + ", ".join([f"'{test}'" for test in selected_tests]) + "]")
@@ -20,7 +19,6 @@ def add_tests_to_filter(selected_tests):
     subprocess.run('git add testfilter.txt', shell=True)
     subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
 
-
 def commit_changes(file):
     # Commit changes to the specified file
     git_add_command = f'git add {file}'
@@ -28,6 +26,11 @@ def commit_changes(file):
     subprocess.run(git_add_command, shell=True)
     subprocess.run(git_commit_command, shell=True)
 
+def handle_rebase_conflict():
+    messagebox.showerror("Rebase Conflict", "A rebase conflict has occurred. Please resolve the conflict manually.")
+    subprocess.run('git rebase --abort', shell=True)
+    print("Rebase conflict detected. Please resolve the conflict manually.")
+    exit(1)
 
 def add_tests_and_push():
     selected_tests = []
@@ -43,8 +46,7 @@ def add_tests_and_push():
 
         # Check if there are local changes that need to be committed before switching branches
         git_status_command = 'git status'
-        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True)
+        result = subprocess.run(git_status_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if "UI.py" in result.stdout:
             print("Local changes detected in UI.py. Committing changes before switching branches...")
             commit_changes("UI.py")
@@ -52,25 +54,35 @@ def add_tests_and_push():
             print("Local changes detected in testfilter.txt. Committing changes before switching branches...")
             commit_changes("testfilter.txt")
 
-        # Create a new branch
-        new_branch_name = input("Enter the name for the new branch: ")
-        subprocess.run(f'git checkout -b {new_branch_name}', shell=True)
+        # Stash any untracked files and changes before rebasing
+        subprocess.run('git add .', shell=True)
+        subprocess.run('git stash', shell=True)
 
         # Pull changes from the remote branch and rebase your local changes
-        subprocess.run('git pull --rebase origin HEAD', shell=True)
+        try:
+            subprocess.run('git pull --rebase origin HEAD', shell=True, check=True)
+        except subprocess.CalledProcessError:
+            handle_rebase_conflict()
+
+        # Unstash any stashed changes after rebasing
+        subprocess.run('git stash pop', shell=True)
 
         # Check if there are changes to commit before pushing to the remote repository
         git_commit_check_command = 'git diff-index --quiet HEAD'
-        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE, text=True)
+        commit_check_result = subprocess.run(git_commit_check_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if commit_check_result.returncode != 0:
             print("Changes detected. Committing changes before pushing...")
             git_commit_command = 'git commit -am "Ci Test"'
             subprocess.run(git_commit_command, shell=True)
 
-        # Push changes to the selected branch
-        repo = repo_var.get()
-        subprocess.run(f'git push origin HEAD:{repo} --force', shell=True)  # Force push to the selected branch
+        # Get the branch name from the entry field
+        branch_name = branch_entry.get() + "/" + patch_entry.get() + "/" + device_entry.get()  ## device name
+
+        # Create a new branch
+        subprocess.run(f'git checkout -b {branch_name}', shell=True)
+
+        # Push the new branch to the remote repository
+        subprocess.run(f'git push origin {branch_name}', shell=True)
 
         print("Changes pushed successfully.")
 
@@ -81,15 +93,27 @@ def add_tests_and_push():
             run_button.invoke()
 
         # Call function to automate web interaction
-        search_url(repo)
+        search_url(branch_name)
+
+        # Add function to delete the branch after the tests are completed
+        delete_branch(branch_name)
 
     else:
         print("No tests selected.")
 
+def delete_branch(branch_name):
+    # Change directory to the project directory
+    path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
+    os.chdir(path)
+
+    # Delete the branch locally and remotely
+    subprocess.run(f'git branch -d {branch_name}', shell=True)
+    subprocess.run(f'git push origin --delete {branch_name}', shell=True)
+
+    print(f"Branch {branch_name} deleted successfully.")
 
 def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
-
     # Function to open the link and click on the "Actions" tab
     def open_and_click_actions_tab():
         # Configure Chrome options
@@ -117,14 +141,14 @@ def search_url(branch_name):
             )
 
             # Fill the username field
-            username_field.send_keys("hemanthponnaganti1@gmail.com")
+            username_field.send_keys(username_entry.get())
 
             # Add a delay to allow the username to be filled
             time.sleep(2)
 
             # Find and fill the password field
             password_field = driver.find_element(By.ID, "password")
-            password_field.send_keys("ponna@123")  # Replace with your password
+            password_field.send_keys(password_entry.get())  # Use the password from entry
 
             # Wait for the sign in button to be clickable
             sign_in_button = WebDriverWait(driver, 10).until(
@@ -153,8 +177,7 @@ def search_url(branch_name):
             time.sleep(7)  # Add a delay for the action to complete
 
             # Click the "Branch" dropdown using CSS selector
-            branch_dropdown = driver.find_element(By.CSS_SELECTOR,
-                                                   'summary[data-view-component="true"] span[data-menu-button]')
+            branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]')
             branch_dropdown.click()
             time.sleep(5)  # Add a delay for the dropdown to open
 
@@ -170,7 +193,7 @@ def search_url(branch_name):
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(80)  # Add a delay for the action to complete
+            time.sleep(200)  # Add a delay for the action to complete
 
         except Exception as e:
             print("Failed to click the buttons:", e)
@@ -181,18 +204,17 @@ def search_url(branch_name):
     # Example usage
     open_and_click_actions_tab()
 
-
 root = tk.Tk()
 root.title("UI for GitHub Actions")
-root.configure(bg="#f0f0ff")  # Set background color
+root.configure(bg="#d9e5ff")  # Set background color
 
 # Create a label for the checkbox section
-test_label = tk.Label(root, text="List of tests", bg="#f0f0ff", font=("Helvetica", 12, "bold"))
-test_label.pack(pady=5)
+test_label = tk.Label(root, text="List of tests", bg="#d9e5ff", font=("Helvetica", 20, "bold"))
+test_label.pack(pady=(10, 5))
 
 # Create a frame for the first UI section containing checkboxes
-frame1 = tk.Frame(root, bg="#f0f0ff")
-frame1.pack(pady=5)
+frame1 = tk.Frame(root, bg="#d9e5ff", pady=10)
+frame1.pack()
 
 checkbox_vars = []
 
@@ -200,26 +222,61 @@ checkbox_vars = []
 unit_test_names = [name for name in dir(unit.TestAddition) if name.startswith('test_')]
 for test_name in unit_test_names:
     var = tk.BooleanVar()
-    checkbox = tk.Checkbutton(frame1, text=test_name, variable=var, bg="#f0f0ff", font=("Helvetica", 10))
-    checkbox.pack(anchor='w')
+    checkbox = tk.Checkbutton(frame1, text=test_name, variable=var, bg="#d9e5ff", font=("Helvetica", 15))
+    checkbox.pack(anchor='w', padx=10, pady=5)
     checkbox_vars.append((var, test_name))
 
-# Create a frame for the second UI section containing entry fields and branch dropdown
-frame2 = tk.Frame(root, bg="#f0f0ff")
-frame2.pack(pady=10)
+# Add a canvas widget for the line separator
+canvas = tk.Canvas(root, height=2, bg="black", highlightthickness=0)
+canvas.create_line(0, 0, 500, 0, fill="black")
+canvas.pack(fill='x', pady=20)
 
-repo_var = tk.StringVar(frame2)
-repos = ["main", "perso/hemanth/UI"]  # List of available repositories
-repo_var.set(repos[0])  # Set the default repository
-repo_dropdown = tk.OptionMenu(frame2, repo_var, *repos)
-repo_dropdown.config(bg="#f0f0ff", font=("Helvetica", 10))
-repo_dropdown.pack(pady=5)
+# Create a frame for the second UI section
+frame2 = tk.Frame(root, bg="#d9e5ff")
+frame2.pack()
+
+# Add a label for users to input their desired branch name
+branch_label = tk.Label(frame2, text="Branch Name", bg="#d9e5ff", font=("Helvetica", 12))
+branch_label.grid(row=1, column=0, pady=(30, 5), padx=10, sticky='w')  # Increased pady
+
+# Add an entry field for users to input branch name
+branch_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10))
+branch_entry.grid(row=1, column=1, pady=(30, 5), padx=10, sticky='w')  # Increased pady and changed sticky to 'w'
+
+# Add a label for users to input their desired device name
+device_label = tk.Label(frame2, text="Patch ID", bg="#d9e5ff", font=("Helvetica", 12))
+device_label.grid(row=0, column=2, pady=(10, 5), padx=10, sticky='e')
+
+# Add an entry field for users to input device name
+device_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10))
+device_entry.grid(row=0, column=3, pady=(10, 5), padx=10, sticky='e')
+
+# Add a label for the Patch Link
+patch_link_label = tk.Label(frame2, text="Device Name:", bg="#d9e5ff", font=("Helvetica", 12))
+patch_link_label.grid(row=0, column=0, pady=(10, 5), padx=10, sticky='w')
+
+# Add an entry field for users to input the patch link
+patch_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10))
+patch_entry.grid(row=0, column=1, pady=(10, 5), padx=10, sticky='w')
+
+# Add labels and entry fields for GitHub login
+username_label = tk.Label(frame2, text="GitHub Username:", bg="#d9e5ff", font=("Helvetica", 12))
+username_label.grid(row=3, column=0, pady=(10, 5), padx=10, sticky='w')
+
+username_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10))
+username_entry.grid(row=3, column=1, pady=(10, 5), padx=10, sticky='w')
+
+password_label = tk.Label(frame2, text="GitHub Password:", bg="#d9e5ff", font=("Helvetica", 12))
+password_label.grid(row=3, column=2, pady=(10, 5), padx=10, sticky='e')
+
+password_entry = tk.Entry(frame2, width=30, font=("Helvetica", 10), show='*')
+password_entry.grid(row=3, column=3, pady=(10, 5), padx=10, sticky='e')
 
 # Add a button to add selected tests and push to the selected repository
 run_button = tk.Button(frame2, text="Start Test", command=add_tests_and_push, bg="#4CAF50", fg="white",
-                       font=("Helvetica", 10, "bold"))
-run_button.pack(pady=5)
+                       font=("Helvetica", 12, "bold"))
+run_button.grid(row=4, column=0, columnspan=4, pady=10)
 
 button_clicked_manually = False
-
+root.geometry("1600x1050")
 root.mainloop()
