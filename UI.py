@@ -106,30 +106,11 @@ def delete_branch(branch_name):
     path = r"C:\Users\hponnaganti\Documents\UI\GitHubActions"
     os.chdir(path)
 
-    try:
-        # Clean up the worktree by removing untracked files and discarding changes
-        subprocess.run('git clean -xdf', shell=True, check=True)
-        subprocess.run('git reset --hard HEAD', shell=True, check=True)
+    # Delete the branch locally and remotely
+    subprocess.run(f'git branch -d {branch_name}', shell=True)
+    subprocess.run(f'git push origin --delete {branch_name}', shell=True)
 
-        # Delete the branch locally (force delete)
-        delete_local_branch_command = f'git branch -D {branch_name}'
-        subprocess.run(delete_local_branch_command, shell=True, check=True)
-        print(f"Local branch {branch_name} deleted successfully.")
-
-        # Check if the branch still exists locally
-        check_local_branch_command = f'git show-ref --verify --quiet refs/heads/{branch_name}'
-        local_branch_exists = subprocess.run(check_local_branch_command, shell=True).returncode == 0
-
-        if not local_branch_exists:
-            # Push the deletion to the remote repository
-            delete_remote_branch_command = f'git push origin --delete {branch_name}'
-            subprocess.run(delete_remote_branch_command, shell=True, check=True)
-            print(f"Remote branch {branch_name} deleted successfully.")
-        else:
-            print(f"Error: Unable to delete remote branch {branch_name}. Local branch still exists.")
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error deleting branch {branch_name}: {e}")
+    print(f"Branch {branch_name} deleted successfully.")
 
 def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
@@ -167,21 +148,29 @@ def search_url(branch_name):
 
             # Find and fill the password field
             password_field = driver.find_element(By.ID, "password")
-            password_field.send_keys(password_entry.get())  # Retrieve password from the entry field
+            password_field.send_keys(password_entry.get())  # Use the password from entry
 
-            # Add a delay to allow the password to be filled
-            time.sleep(2)
+            # Wait for the sign in button to be clickable
+            sign_in_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
+            )
 
-            # Submit the login form
-            password_field.send_keys(Keys.RETURN)
+            # Click the sign in button
+            sign_in_button.click()
 
-            # Wait for login to complete
-            time.sleep(5)
+            # Add a delay for the sign-in process
+            time.sleep(8)
 
-        except Exception as e:
-            print("Failed to login:", e)
+            # Click the "Actions" tab again
+            actions_tab_element = driver.find_element(By.ID, 'actions-tab')
+            actions_tab_element.click()
+            time.sleep(5)  # Add a delay for the tab switch to complete
 
-        try:
+            # Click the "Run Tests" link
+            run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
+            run_tests_link.click()
+            time.sleep(7)  # Add a delay for the new page to load
+
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
             run_workflow_button.click()
@@ -290,4 +279,4 @@ run_button.grid(row=4, column=0, columnspan=4, pady=10)
 
 button_clicked_manually = False
 root.geometry("1600x1050")
-root.mainloop()
+root.mainloop() 
