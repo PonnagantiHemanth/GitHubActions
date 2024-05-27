@@ -18,7 +18,6 @@ def add_tests_to_filter(selected_tests):
     # Stage and commit the changes for testfilter.txt
     subprocess.run('git add testfilter.txt', shell=True)
     subprocess.run('git commit -m "Update testfilter.txt"', shell=True)
-
 def commit_changes(file):
     # Commit changes to the specified file
     git_add_command = f'git add {file}'

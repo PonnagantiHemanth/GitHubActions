@@ -1,1 +1,1 @@
-['test_mixed_positive_negative', 'test_list_concatenation', 'test_tuple_concatenation']
+['test_negative', 'test_mixed_positive_negative', 'test_zero', 'test_large_numbers', 'test_decimal_numbers', 'test_list_concatenation', 'test_tuple_concatenation', 'test_invalid_input']
