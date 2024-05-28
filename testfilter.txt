@@ -1,1 +1,1 @@
-['test_negative', 'test_decimal_numbers', 'test_tuple_concatenation', 'test_invalid_input']
+['test_negative', 'test_tuple_concatenation', 'test_invalid_input']

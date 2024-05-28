@@ -244,17 +244,22 @@ def delete_branch(branch_name):
 # Set up the main application window
 root = tk.Tk()
 root.title("Scroll Bar")
-root.attributes("-topmost", True)
+#root.attributes("-topmost", True)
 root.configure(bg="white")  # Set background color
+root.geometry("1300x800")
+
+# Add left side padding
+left_padding_label = tk.Label(root, text="", bg="white")
+left_padding_label.grid(row=0, column=0)
 
 # Create a heading label and center it
 heading_label = tk.Label(root, text="Test Category", font=("Helvetica", 16), padx=20, pady=10, bg="white")
-heading_label.grid(row=0, column=0, columnspan=2, sticky="w")
+heading_label.grid(row=0, column=1, columnspan=2, sticky="w")
 
 # Create a Combobox (dropdown menu) after the label
 dropdown_values = ["Mouse", "Keyboard"]
-combobox = ttk.Combobox(root, values=dropdown_values, state="readonly", width=27, font=("Helvetica", 10))
-combobox.grid(row=1, column=0, padx=20, pady=(0, 10), sticky="w")
+combobox = ttk.Combobox(root, values=dropdown_values, state="readonly")
+combobox.grid(row=1, column=1, padx=20, pady=(0, 10), sticky="w")
 combobox.current(0)  # Set the default selection
 
 # Bind the combobox selection event to update the test list
@@ -262,7 +267,7 @@ combobox.bind("<<ComboboxSelected>>", update_tests)
 
 # Create a frame for the listboxes
 listboxes_frame = tk.Frame(root, bg="white")
-listboxes_frame.grid(row=2, column=0, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
+listboxes_frame.grid(row=2, column=1, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
 
 # Create a listbox to display the test names
 listbox = tk.Listbox(listboxes_frame, width=40, height=10, highlightthickness=0, borderwidth=5)
@@ -279,24 +284,24 @@ scrollbar.config(command=listbox.yview)
 listbox.config(yscrollcommand=scrollbar.set)
 
 # Create a placeholder column between the listboxes
-tk.Label(root, text="", bg="white").grid(row=2, column=1)
+tk.Label(root, text="", bg="white").grid(row=2, column=2)
 
 # Create a frame to contain both selected tests and the additional box
 combined_frame = tk.Frame(root, bg="white")
-combined_frame.grid(row=2, column=3, rowspan=2, padx=400, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
+combined_frame.grid(row=2, column=3, rowspan=2, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
 
 # Create a frame for the selected test listbox with initial padding
 selected_test_frame = tk.Frame(combined_frame, highlightthickness=0, bg="white")
-selected_test_frame.pack(fill=tk.BOTH, expand=True)
+selected_test_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)  # Add padding here
 
 # Create a label for the selected test
 selected_test_label = tk.Label(selected_test_frame, text="Selected Tests:", font=("Helvetica", 14), bg="white")
 selected_test_label.pack(anchor="w")
 
 # Create a listbox to display the selected tests
-selected_test_listbox = tk.Listbox(selected_test_frame, width=10, height=20, highlightthickness=0, borderwidth=5)
+selected_test_listbox = tk.Listbox(selected_test_frame, width=40, height=10, highlightthickness=0, borderwidth=5)
 selected_test_listbox.pack(fill=tk.BOTH, expand=True)
-selected_test_listbox.config(height=10, width=100, bg="white")  # Set fixed width for the selected test listbox
+selected_test_listbox.config(bg="white")  # Removed fixed width for the selected test listbox
 
 # Add a scrollbar to the selected test listbox
 selected_test_scrollbar = tk.Scrollbar(selected_test_frame, orient=tk.VERTICAL, command=selected_test_listbox.yview)
@@ -313,51 +318,45 @@ device_name_label_1.grid(row=0, column=0, sticky="w")
 
 # Create a Combobox for device name 1 inside the additional box
 device_name_values = ["Mouse", "Keyboard", "Drifter"]
-device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly", width=27, font=("Helvetica", 10))
+device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly")
 device_combobox_1.grid(row=0, column=1, padx=(10,0), pady=8, sticky="w")
-device_combobox_1.current(0)
+device_combobox_1.current(0)  # Set the default selection
 
-# Create a label for device entry 2
-device_name_label_2 = tk.Label(additional_frame, text="Device Entry 2:", font=("Helvetica", 14), bg="white")
-device_name_label_2.grid(row=1, column=0, sticky="w")
+# Create another label for the additional box
+device_name_label_2 = tk.Label(additional_frame, text="Patch_No:", font=("Helvetica", 14), bg="white")
+device_name_label_2.grid(row=0, column=2, sticky="s")
 
-# Create an entry box for device entry 2
-device_entry_2 = tk.Entry(additional_frame, font=("Helvetica", 10), width=30, bg="white", bd=2, relief=tk.SOLID)
-device_entry_2.grid(row=1, column=1, padx=(10,0), pady=8, sticky="w")
+# Create an Entry box for device name 2 inside the additional box
+device_entry_2 = tk.Entry(additional_frame, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
+device_entry_2.grid(row=0, column=3, sticky="w")
 
-# Create a label for device combobox 3
-device_name_label_3 = tk.Label(additional_frame, text="Device Combobox 3:", font=("Helvetica", 14), bg="white")
-device_name_label_3.grid(row=2, column=0, sticky="w")
+# Create another label for the additional box
+device_name_label_3 = tk.Label(additional_frame, text="Test  Bed:", font=("Helvetica", 14), bg="white")
+device_name_label_3.grid(row=2, column=1, sticky="w", padx=8)
 
-# Create a Combobox for device combobox 3
-device_combobox_values_3 = ["Mouse", "Keyboard", "Drifter"]
-device_combobox_3 = ttk.Combobox(additional_frame, values=device_combobox_values_3, state="readonly", width=27, font=("Helvetica", 10))
-device_combobox_3.grid(row=2, column=1, padx=(10,0), pady=8, sticky="w")
-device_combobox_3.current(0)
+# Create a Combobox for device name 3 inside the additional box
+device_name_values2 = ["Kosmos","OtherDevices"]
+device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
+device_combobox_3.grid(row=2, column=2, padx=(10, 0), pady=50, sticky="w")
+device_combobox_3.current(0)  # Set the default selection
 
-# Create a frame for the buttons
-button_frame = tk.Frame(root, bg="white")
-button_frame.grid(row=3, column=0, columnspan=2, pady=(0, 20))
+username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 12))
+username_label.grid(row=3, column=0, pady=(10, 5), padx=10, sticky='w')
 
-# Create a button to start the test
-start_button = tk.Button(button_frame, text="Start Test", font=("Helvetica", 14), command=start_test, bg="white", bd=2, relief=tk.SOLID)
-start_button.grid(row=0, column=0, padx=20, pady=10, sticky="w")
+username_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID)
+username_entry.grid(row=3, column=1, pady=(10, 5), padx=10, sticky='w')
 
-# Create a label for the username entry
-username_label = tk.Label(root, text="Username:", font=("Helvetica", 14), bg="white")
-username_label.grid(row=4, column=0, padx=20, pady=(0, 10), sticky="w")
+password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 12))
+password_label.grid(row=3, column=2, pady=(10, 5), padx=10, sticky='e')
 
-# Create an entry box for the username
-username_entry = tk.Entry(root, font=("Helvetica", 10), width=30, bg="white", bd=2, relief=tk.SOLID)
-username_entry.grid(row=5, column=0, padx=20, pady=(0, 20), sticky="w")
+password_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID, show='*')
+password_entry.grid(row=3, column=3, pady=(10, 5), padx=10, sticky='ws')
 
-# Create a label for the password entry
-password_label = tk.Label(root, text="Password:", font=("Helvetica", 14), bg="white")
-password_label.grid(row=6, column=0, padx=20, pady=(0, 10), sticky="w")
+button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
+                   anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
+                   font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
+                   highlightthickness=2, justify="center", overrelief="raised", padx=10, pady=5, width=15,
+                   wraplength=100)
+button.grid(row=4, column=3,padx=3,pady=10)
 
-# Create an entry box for the password
-password_entry = tk.Entry(root, font=("Helvetica", 10), width=30, show="*", bg="white", bd=2, relief=tk.SOLID)
-password_entry.grid(row=7, column=0, padx=20, pady=(0, 20), sticky="w")
-
-# Run the application
 root.mainloop()
