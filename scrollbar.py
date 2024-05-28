@@ -368,3 +368,4 @@ horizontal_line2 = ttk.Separator(root, orient='horizontal')
 horizontal_line2.grid(row=3, column=1, columnspan=3, sticky='ew', pady=10)
 
 root.mainloop()
+
