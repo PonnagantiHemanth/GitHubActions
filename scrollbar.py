@@ -246,7 +246,7 @@ root = tk.Tk()
 root.title("Scroll Bar")
 #root.attributes("-topmost", True)
 root.configure(bg="white")  # Set background color
-root.geometry("1300x800")
+root.geometry("1300x850")
 
 # Add left side padding
 left_padding_label = tk.Label(root, text="", bg="white")
