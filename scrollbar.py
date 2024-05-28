@@ -106,8 +106,8 @@ def start_test():
 
     # Create a temporary branch name based on current time
     timestamp = int(time.time())
-    branch_name = combobox.get()+device_entry_2.get()+ device_combobox_3.get()
-    #branch_name = device_name_values.get() + device_entry_2.get() + device_combobox_3.get()
+    branch_name = combobox.get() + device_entry_2.get() + device_combobox_3.get()
+    # branch_name = device_name_values.get() + device_entry_2.get() + device_combobox_3.get()
 
     # Initialize a Git repository in the current directory
     subprocess.run(["git", "init"])
@@ -141,6 +141,7 @@ def start_test():
 
 def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
+
     # Function to open the link and click on the "Actions" tab
     def open_and_click_actions_tab():
         # Configure Chrome options
@@ -244,7 +245,7 @@ def delete_branch(branch_name):
 # Set up the main application window
 root = tk.Tk()
 root.title("Scroll Bar")
-#root.attributes("-topmost", True)
+# root.attributes("-topmost", True)
 root.configure(bg="white")  # Set background color
 root.geometry("1300x850")
 
@@ -265,11 +266,11 @@ combobox.current(0)  # Set the default selection
 # Bind the combobox selection event to update the test list
 combobox.bind("<<ComboboxSelected>>", update_tests)
 
-# Create a frame for the listboxes
-listboxes_frame = tk.Frame(root, bg="white")
+# Create a frame for the listboxes with styling
+listboxes_frame = tk.Frame(root, bg="white", bd=2, relief=tk.SOLID)
 listboxes_frame.grid(row=2, column=1, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
 
-# Create a listbox to display the test names
+# Create a listbox to display the test names with styling
 listbox = tk.Listbox(listboxes_frame, width=40, height=10, highlightthickness=0, borderwidth=5)
 listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 listbox.config(width=50, height=20, bg="white")  # Set fixed width and height for the listbox
@@ -319,7 +320,7 @@ device_name_label_1.grid(row=0, column=0, sticky="w")
 # Create a Combobox for device name 1 inside the additional box
 device_name_values = ["Mouse", "Keyboard", "Drifter"]
 device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly")
-device_combobox_1.grid(row=0, column=1, padx=(10,0), pady=8, sticky="w")
+device_combobox_1.grid(row=0, column=1, padx=(10, 0), pady=8, sticky="w")
 device_combobox_1.current(0)  # Set the default selection
 
 # Create another label for the additional box
@@ -335,7 +336,7 @@ device_name_label_3 = tk.Label(additional_frame, text="Test  Bed:", font=("Helve
 device_name_label_3.grid(row=2, column=1, sticky="w", padx=8)
 
 # Create a Combobox for device name 3 inside the additional box
-device_name_values2 = ["Kosmos","OtherDevices"]
+device_name_values2 = ["Kosmos", "OtherDevices"]
 device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
 device_combobox_3.grid(row=2, column=2, padx=(10, 0), pady=50, sticky="w")
 device_combobox_3.current(0)  # Set the default selection
@@ -357,6 +358,13 @@ button = tk.Button(root, text="Start Test", command=start_test, activebackground
                    font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
                    highlightthickness=2, justify="center", overrelief="raised", padx=10, pady=5, width=15,
                    wraplength=100)
-button.grid(row=4, column=3,padx=3,pady=10)
+button.grid(row=4, column=3, padx=3, pady=10)
+
+# Add horizontal lines
+horizontal_line1 = ttk.Separator(root, orient='horizontal')
+horizontal_line1.grid(row=1, column=1, columnspan=3, sticky='ew', pady=(10, 0))
+
+horizontal_line2 = ttk.Separator(root, orient='horizontal')
+horizontal_line2.grid(row=3, column=1, columnspan=3, sticky='ew', pady=10)
 
 root.mainloop()
