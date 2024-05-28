@@ -1,1 +1,1 @@
-['test_large_numbers', 'test_decimal_numbers', 'test_invalid_input', 'test_negative', 'test_positive']
+['test_zero', 'test_list_concatenation', 'test_invalid_input']
