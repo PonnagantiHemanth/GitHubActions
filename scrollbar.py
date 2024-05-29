@@ -301,13 +301,17 @@ selected_test_label.pack(anchor="w")
 
 # Create a listbox to display the selected tests
 selected_test_listbox = tk.Listbox(selected_test_frame, width=40, height=10, highlightthickness=0, borderwidth=5)
-selected_test_listbox.pack(fill=tk.BOTH, expand=True)
+selected_test_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 selected_test_listbox.config(bg="white")  # Removed fixed width for the selected test listbox
 
-# Add a scrollbar to the selected test listbox
-selected_test_scrollbar = tk.Scrollbar(selected_test_frame, orient=tk.VERTICAL, command=selected_test_listbox.yview)
+# Create a scrollbar for the selected test listbox
+selected_test_scrollbar = tk.Scrollbar(selected_test_frame, orient=tk.VERTICAL)
 selected_test_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+selected_test_scrollbar.config(command=selected_test_listbox.yview)  # Connect scrollbar to listbox
+
+# Configure the listbox to use the scrollbar
 selected_test_listbox.config(yscrollcommand=selected_test_scrollbar.set)
+
 
 # Create a frame for the additional box below the selected tests
 additional_frame = tk.Frame(combined_frame, bg="white")
