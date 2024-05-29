@@ -317,7 +317,7 @@ additional_frame.pack(fill=tk.BOTH, expand=True, pady=(100, 0))
 device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
 device_name_label_1.grid(row=0, column=0, sticky="w")
 
-# Create a Combobox for device name 1 inside the additional box
+# Create a Combobox for device name 1 inside the additional  box
 device_name_values = ["Mouse", "Keyboard", "Drifter"]
 device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly")
 device_combobox_1.grid(row=0, column=1, padx=(10, 0), pady=8, sticky="w")
