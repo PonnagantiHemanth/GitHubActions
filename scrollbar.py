@@ -367,9 +367,6 @@ button.grid(row=4, column=3, padx=3, pady=10)
 # Add horizontal lines
 horizontal_line1 = ttk.Separator(root, orient='horizontal')
 horizontal_line1.grid(row=1, column=1, columnspan=3, sticky='ew', pady=(10, 0))
-
 horizontal_line2 = ttk.Separator(root, orient='horizontal')
 horizontal_line2.grid(row=3, column=1, columnspan=3, sticky='ew', pady=10)
-
 root.mainloop()
-
