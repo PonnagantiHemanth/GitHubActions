@@ -154,12 +154,12 @@ def search_url(branch_name):
 
         driver.maximize_window()
 
-        time.sleep(5)  # Adjust the wait time as needed
+        time.sleep(3)  # Adjust the wait time as needed
 
         actions_tab_element = driver.find_element(By.ID, 'actions-tab')
         actions_tab_element.click()
 
-        time.sleep(5)
+        time.sleep(3)
 
         try:
             driver.execute_script("document.querySelector('a[href^=\"/login?\"]').click();")
@@ -187,7 +187,7 @@ def search_url(branch_name):
             sign_in_button.click()
 
             # Add a delay for the sign-in process
-            time.sleep(8)
+            time.sleep(5)
 
             # Click the "Actions" tab again
             actions_tab_element = driver.find_element(By.ID, 'actions-tab')
@@ -197,12 +197,12 @@ def search_url(branch_name):
             # Click the "Run Tests" link
             run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
             run_tests_link.click()
-            time.sleep(7)  # Add a delay for the new page to load
+            time.sleep(5)  # Add a delay for the new page to load
 
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(7)  # Add a delay for the action to complete
+            time.sleep(5)  # Add a delay for the action to complete
 
             # Click the "Branch" dropdown using CSS selector
             branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]')
