@@ -346,16 +346,16 @@ device_combobox_3.grid(row=2, column=2, padx=(10, 0), pady=50, sticky="w")
 device_combobox_3.current(0)  # Set the default selection
 
 username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 12))
-username_label.grid(row=3, column=0, pady=(10, 5), padx=10, sticky='w')
+username_label.grid(row=3, column=0, pady=(20, 5), padx=10, sticky='w')
 
 username_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID)
-username_entry.grid(row=3, column=1, pady=(10, 5), padx=10, sticky='w')
+username_entry.grid(row=3, column=1, pady=(20, 5), padx=10, sticky='w')
 
 password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 12))
-password_label.grid(row=3, column=2, pady=(10, 5), padx=10, sticky='e')
+password_label.grid(row=3, column=2, pady=(10, 5), padx=20, sticky='e')
 
 password_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID, show='*')
-password_entry.grid(row=3, column=3, pady=(10, 5), padx=10, sticky='ws')
+password_entry.grid(row=3, column=3, pady=(10, 5), padx=20, sticky='ws')
 
 button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
                    anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
@@ -365,8 +365,13 @@ button = tk.Button(root, text="Start Test", command=start_test, activebackground
 button.grid(row=4, column=3, padx=3, pady=10)
 
 # Add horizontal lines
+# Add horizontal lines with padding
+# Add horizontal lines with more padding
 horizontal_line1 = ttk.Separator(root, orient='horizontal')
-horizontal_line1.grid(row=1, column=1, columnspan=3, sticky='ew', pady=(10, 0))
+horizontal_line1.grid(row=1, column=1, columnspan=5, sticky='ew', pady=(40, 30), padx=50)
+
 horizontal_line2 = ttk.Separator(root, orient='horizontal')
-horizontal_line2.grid(row=3, column=1, columnspan=3, sticky='ew', pady=10)
+horizontal_line2.grid(row=3, column=1, columnspan=5, sticky='ew', pady=(50, 80), padx=50)
+
+
 root.mainloop()
