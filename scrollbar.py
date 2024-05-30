@@ -143,83 +143,94 @@ def search_url(branch_name):
     url = "https://github.com/PonnagantiHemanth/GitHubActions"  # The URL is constant
 
     # Function to open the link and click on the "Actions" tab
-    def open_and_click_actions_tab(driver):
+    def open_and_click_actions_tab():
+        # Configure Chrome options
+        options = Options()
+        options.headless = True  # Run Chrome in headless mode (no GUI)
+
+        driver = webdriver.Chrome(options=options)
+
         driver.get(url)
+
         driver.maximize_window()
 
-        actions_tab_element = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.ID, 'actions-tab'))
-        )
+        time.sleep(3)  # Adjust the wait time as needed
+
+        actions_tab_element = driver.find_element(By.ID, 'actions-tab')
         actions_tab_element.click()
 
+        time.sleep(3)
+
+        try:
+            driver.execute_script("document.querySelector('a[href^=\"/login?\"]').click();")
+
+            username_field = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "login_field"))
+            )
+
+            # Fill the username field
+            username_field.send_keys(username_entry.get())
+
+            # Add a delay to allow the username to be filled
+            time.sleep(2)
+
+            # Find and fill the password field
+            password_field = driver.find_element(By.ID, "password")
+            password_field.send_keys(password_entry.get())  # Use the password from entry
+
+            # Wait for the sign in button to be clickable
+            sign_in_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
+            )
+
+            # Click the sign in button
+            sign_in_button.click()
+
+            # Add a delay for the sign-in process
+            time.sleep(5)
+
+            # Click the "Actions" tab again
+            actions_tab_element = driver.find_element(By.ID, 'actions-tab')
+            actions_tab_element.click()
+            time.sleep(5)  # Add a delay for the tab switch to complete
+
+            # Click the "Run Tests" link
+            run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
+            run_tests_link.click()
+            time.sleep(5)  # Add a delay for the new page to load
+
+            # Click the "Run workflow" button
+            run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
+            run_workflow_button.click()
+            time.sleep(5)  # Add a delay for the action to complete
+
+            # Click the "Branch" dropdown using CSS selector
+            branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]')
+            branch_dropdown.click()
+            time.sleep(5)  # Add a delay for the dropdown to open
+
+            # Enter the branch name in the input field
+            branch_input = driver.find_element(By.ID, 'context-commitish-filter-field')
+            branch_input.send_keys(branch_name)
+            time.sleep(2)  # Add a delay for the branch name to be entered
+
+            # Press Enter to confirm the branch selection
+            branch_input.send_keys(Keys.RETURN)
+            time.sleep(5)  # Add a delay for the branch selection to be applied
+
+            # Click the "Run workflow" button
+            run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
+            run_workflow_button.click()
+            time.sleep(50)  # Add a delay for the action to complete
+
+        except Exception as e:
+            print("Failed to click the buttons:", e)
+
+        # Close the ChromeDriver instance
+        driver.quit()
+
     # Example usage
-    options = Options()
-    options.headless = True  # Run Chrome in headless mode (no GUI)
-    driver = webdriver.Chrome(options=options)
-    open_and_click_actions_tab(driver)
-
-    try:
-        driver.execute_script("document.querySelector('a[href^=\"/login?\"]').click();")
-
-        username_field = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.ID, "login_field"))
-        )
-        # Fill the username field
-        username_field.send_keys(username_entry.get())
-
-        # Find and fill the password field
-        password_field = driver.find_element(By.ID, "password")
-        password_field.send_keys(password_entry.get())  # Use the password from entry
-
-        # Wait for the sign in button to be clickable
-        sign_in_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
-        )
-
-        # Click the sign in button
-        sign_in_button.click()
-
-        # Click the "Actions" tab again
-        open_and_click_actions_tab(driver)
-
-        # Click the "Run Tests" link
-        run_tests_link = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]'))
-        )
-        run_tests_link.click()
-
-        # Click the "Run workflow" button
-        run_workflow_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//summary[contains(text(), "Run workflow")]'))
-        )
-        run_workflow_button.click()
-
-        # Click the "Branch" dropdown using CSS selector
-        branch_dropdown = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]'))
-        )
-        branch_dropdown.click()
-
-        # Enter the branch name in the input field
-        branch_input = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.ID, 'context-commitish-filter-field'))
-        )
-        branch_input.send_keys(branch_name)
-
-        # Press Enter to confirm the branch selection
-        branch_input.send_keys(Keys.RETURN)
-
-        # Click the "Run workflow" button
-        run_workflow_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[contains(text(), "Run workflow")]'))
-        )
-        run_workflow_button.click()
-
-    except Exception as e:
-        print("Failed to click the buttons:", e)
-
-    # Close the ChromeDriver instance
-    driver.quit()
+    open_and_click_actions_tab()
 
 
 def delete_branch(branch_name):
