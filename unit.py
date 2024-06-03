@@ -1,6 +1,12 @@
 import unittest
 
 
+def test_positive(self):
+    print("positive")
+    result = addition(5, 6)
+    self.assertEqual(result, 11)
+
+
 def addition(a, b):
     return a + b
 def fibonacci(n):

@@ -82,7 +82,7 @@ def display_selected_test(event):
         selected_test_listbox.insert(tk.END, test_name)
 
     # Apply a border around the selected test listbox
-    selected_test_frame.config(highlightbackground="black", highlightcolor="black", highlightthickness=2)
+    selected_test_frame.config(highlightbackground="black", highlightcolor="black", highlightthickness=2, padx=10, pady=10)
 
     # Write selected tests to file
     write_selected_tests_to_file()
@@ -107,6 +107,7 @@ def start_test():
     # Create a temporary branch name based on current time
     timestamp = int(time.time())
     branch_name = combobox.get() + device_entry_2.get() + device_combobox_3.get()
+    # branch_name = device_name_values.get() + device_entry_2.get() + device_combobox_3.get()
 
     # Initialize a Git repository in the current directory
     subprocess.run(["git", "init"])
@@ -204,114 +205,172 @@ def search_url(branch_name):
             time.sleep(5)  # Add a delay for the action to complete
 
             # Click the "Branch" dropdown using CSS selector
-            branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-hotkey="b"]')
+            branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]')
             branch_dropdown.click()
-            time.sleep(2)
+            time.sleep(5)  # Add a delay for the dropdown to open
 
-            # Search for the branch name
-            search_input = driver.find_element(By.CSS_SELECTOR, 'input[name="filter-ref-list"]')
-            search_input.send_keys(branch_name)
-            time.sleep(2)
+            # Enter the branch name in the input field
+            branch_input = driver.find_element(By.ID, 'context-commitish-filter-field')
+            branch_input.send_keys(branch_name)
+            time.sleep(2)  # Add a delay for the branch name to be entered
 
-            # Click on the branch name in the dropdown
-            branch_option = driver.find_element(By.CSS_SELECTOR, f'div[data-target^="/PonnagantiHemanth/GitHubActions/actions/runs/{branch_name}"]')
-            branch_option.click()
-            time.sleep(2)
+            # Press Enter to confirm the branch selection
+            branch_input.send_keys(Keys.RETURN)
+            time.sleep(5)  # Add a delay for the branch selection to be applied
 
-            # Click the "Run workflow" button again
+            # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(5)  # Add a delay for the action to complete
+            time.sleep(50)  # Add a delay for the action to complete
 
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
-            messagebox.showerror("Error", f"An error occurred: {str(e)}")
+            print("Failed to click the buttons:", e)
 
-        finally:
-            driver.quit()
+        # Close the ChromeDriver instance
+        driver.quit()
 
-    # Open the link and click the "Actions" tab
+    # Example usage
     open_and_click_actions_tab()
 
 
 def delete_branch(branch_name):
-    # Switch to the main branch
-    subprocess.run(["git", "checkout", "main"])
+    # Delete the branch locally
+    subprocess.run(["git", "checkout", "main"])  # Switch to master branch before deletion
+    subprocess.run(["git", "branch", "-d", branch_name])
 
-    # Delete the local branch
-    subprocess.run(["git", "branch", "-D", branch_name])
-
-    # Delete the remote branch
+    # Delete the branch remotely
     subprocess.run(["git", "push", "origin", "--delete", branch_name])
+    print("Branch deleted")
 
+# Set up the main application window
+root = tk.Tk()
+root.title("Scroll Bar")
+# root.attributes("-topmost", True)
+root.configure(bg="white")  # Set background color
+root.geometry("1350x900")
 
-# Create the main window
-window = tk.Tk()
-window.title("GitHub Actions UI")
+# Add left side padding
+left_padding_label = tk.Label(root, text="", bg="white")
+left_padding_label.grid(row=0, column=0)
 
-# Add a label
-label = ttk.Label(window, text="Select the type of test:")
-label.grid(row=0, column=0, padx=10, pady=10)
+# Create a heading label and center it
+heading_label = tk.Label(root, text="Test Category", font=("Helvetica", 16), padx=20, pady=10, bg="white")
+heading_label.grid(row=0, column=1, columnspan=2, sticky="w")
 
-# Add a combobox to select the type of test
-options = ["Mouse", "Keyboard"]
-combobox = ttk.Combobox(window, values=options)
-combobox.grid(row=0, column=1, padx=10, pady=10)
-combobox.current(0)  # Set default selection
+# Create a Combobox (dropdown menu) after the label
+dropdown_values = ["Mouse", "Keyboard"]
+combobox = ttk.Combobox(root, values=dropdown_values, state="readonly")
+combobox.grid(row=1, column=1, padx=20, pady=(0, 10), sticky="w")
+combobox.current(0)  # Set the default selection
+
+# Bind the combobox selection event to update the test list
 combobox.bind("<<ComboboxSelected>>", update_tests)
 
-# Add a listbox to display the test names
-listbox = tk.Listbox(window, selectmode=tk.MULTIPLE, width=50, height=10)
-listbox.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
-display_test_names("Mouse")  # Display test names initially
+# Create a frame for the listboxes with styling
+listboxes_frame = tk.Frame(root, bg="white", bd=2, relief=tk.SOLID)
+listboxes_frame.grid(row=3, column=1, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
 
-# Bind a function to the listbox to display the selected test in the selected test listbox
+# Create a listbox to display the test names with styling
+listbox = tk.Listbox(listboxes_frame, width=60, height=40, bg="white", highlightthickness=0, borderwidth=1)
+listbox.pack(side=tk.LEFT, expand=False)
+
+# Bind the event to display the selected test
 listbox.bind("<<ListboxSelect>>", display_selected_test)
 
-# Add a frame to hold the selected test listbox
-selected_test_frame = tk.Frame(window, relief=tk.GROOVE, borderwidth=2)
-selected_test_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+# Create a scrollbar for the listbox
+# Create a scrollbar for the listbox
+scrollbar = tk.Scrollbar(listboxes_frame, orient=tk.VERTICAL)
+scrollbar.pack(side=tk.LEFT, fill=tk.Y)
+scrollbar.config(command=listbox.yview)
+listbox.config(yscrollcommand=scrollbar.set)
 
-# Add a label for the selected tests
-selected_test_label = ttk.Label(selected_test_frame, text="Selected Tests:")
-selected_test_label.grid(row=0, column=0, padx=10, pady=10)
+# Add padding after the first scrollbar
+padding_label = tk.Label(listboxes_frame, text="", bg="white")
+padding_label.pack(side=tk.LEFT)
 
-# Add a listbox to display the selected tests
-selected_test_listbox = tk.Listbox(selected_test_frame, selectmode=tk.MULTIPLE, width=50, height=10)
-selected_test_listbox.grid(row=1, column=0, padx=10, pady=10)
+# Create a placeholder column between the listboxes
+tk.Label(root, text="", bg="white").grid(row=3, column=2)
 
-# Add scrollbars to the listboxes
-listbox_scrollbar = ttk.Scrollbar(window, orient=tk.VERTICAL, command=listbox.yview)
-listbox_scrollbar.grid(row=1, column=2, sticky=(tk.N, tk.S))
-listbox.config(yscrollcommand=listbox_scrollbar.set)
 
-selected_test_listbox_scrollbar = ttk.Scrollbar(selected_test_frame, orient=tk.VERTICAL, command=selected_test_listbox.yview)
-selected_test_listbox_scrollbar.grid(row=1, column=1, sticky=(tk.N, tk.S))
-selected_test_listbox.config(yscrollcommand=selected_test_listbox_scrollbar.set)
+# Create a frame to contain both selected tests and the additional box
+combined_frame = tk.Frame(root, bg="white")
+combined_frame.grid(row=2, column=2, rowspan=2, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
 
-# Add start button
-start_button = ttk.Button(window, text="Start Tests", command=start_test)
-start_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+# Create a frame for the selected test listbox with initial padding
+selected_test_frame = tk.Frame(combined_frame, highlightthickness=0, bg="white")
+selected_test_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)  # Add padding here
 
-# Add entries for GitHub credentials
-username_label = ttk.Label(window, text="GitHub Username:")
-username_label.grid(row=4, column=0, padx=10, pady=10, sticky="e")
-username_entry = ttk.Entry(window)
-username_entry.grid(row=4, column=1, padx=10, pady=10)
+# Create a label for the selected test
+selected_test_label = tk.Label(selected_test_frame, text="Selected Tests:", font=("Helvetica", 14), bg="white")
+selected_test_label.pack(anchor="w")
 
-password_label = ttk.Label(window, text="GitHub Password:")
-password_label.grid(row=5, column=0, padx=10, pady=10, sticky="e")
-password_entry = ttk.Entry(window, show="*")
-password_entry.grid(row=5, column=1, padx=10, pady=10)
+# Create a listbox to display the selected tests
+selected_test_listbox = tk.Listbox(selected_test_frame, width=40, height=10, highlightthickness=0, borderwidth=5)
+selected_test_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True,pady=10)
+selected_test_listbox.config(bg="white")  # Removed fixed width for the selected test listbox
 
-# Add device entry and combobox
-device_label_2 = ttk.Label(window, text="Device:")
-device_label_2.grid(row=6, column=0, padx=10, pady=10, sticky="e")
-device_entry_2 = ttk.Entry(window)
-device_entry_2.grid(row=6, column=1, padx=10, pady=10)
+# Create a scrollbar for the selected test listbox
+selected_test_scrollbar = tk.Scrollbar(selected_test_frame, orient=tk.VERTICAL)
+selected_test_scrollbar.pack(side=tk.LEFT, fill=tk.Y)
+selected_test_scrollbar.config(command=selected_test_listbox.yview)  # Connect scrollbar to listbox
 
-device_combobox_3 = ttk.Combobox(window, values=["Desktop", "Mobile"])
-device_combobox_3.grid(row=7, column=0, padx=10, pady=10, sticky="e")
-device_combobox_3.current(0)
+# Configure the listbox to use the scrollbar
+selected_test_listbox.config(yscrollcommand=selected_test_scrollbar.set)
 
-window.mainloop()
+# Create a frame for the additional box below the selected tests
+additional_frame = tk.Frame(combined_frame, bg="white")
+additional_frame.pack(fill=tk.BOTH, expand=True, pady=(200, 0), padx=20)  # Add padding here
+
+# Create a label for the additional box
+device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
+device_name_label_1.grid(row=0, column=0, sticky="w", padx=20)
+
+# Create a Combobox for device name 1 inside the additional  box
+device_name_values = ["Mouse", "Keyboard", "Drifter"]
+device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly")
+device_combobox_1.grid(row=0, column=1, padx=(10, 0), pady=8, sticky="w")
+device_combobox_1.current(0)  # Set the default selection
+
+# Create another label for the additional box
+device_name_label_2 = tk.Label(additional_frame, text="Patch_No:", font=("Helvetica", 14), bg="white")
+device_name_label_2.grid(row=0, column=2, sticky="s")
+
+# Create an Entry box for device name 2 inside the additional box
+device_entry_2 = tk.Entry(additional_frame, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
+device_entry_2.grid(row=0, column=3, sticky="w")
+
+# Create another label for the additional box
+# Create another label for the additional box
+device_name_label_3 = tk.Label(additional_frame, text="Test Bed:", font=("Helvetica", 14), bg="white")
+device_name_label_3.grid(row=1, column=0, sticky="w", padx=20, pady=(20, 5))
+
+# Create a Combobox for device name 3 inside the additional box
+device_name_values2 = ["Kosmos", "OtherDevices"]
+device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
+device_combobox_3.grid(row=1, column=1, padx=(10, 0), pady=(20, 5), sticky="w")
+device_combobox_3.current(0)  # Set the default selection
+
+
+username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 12))
+username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
+
+username_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID)
+username_entry.grid(row=2, column=1, pady=(20, 5), padx=20, sticky='w')
+
+password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 12))
+password_label.grid(row=2, column=2, pady=(10, 5), padx=20, sticky='e')
+
+password_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID, show='*')
+password_entry.grid(row=2, column=3, pady=(10, 5), padx=10, sticky='ws')
+
+button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
+                   anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
+                   font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
+                   highlightthickness=2, justify="center", overrelief="raised", padx=10, pady=5, width=15,
+                   wraplength=100)
+button.grid(row=4, column=2, padx=3, pady=10, sticky="s")
+# Add horizontal lines
+#horizontal_line1 = ttk.Separator(root, orient='horizontal')
+#horizontal_line1.grid(row=1, column=1, columnspan=10, sticky='ew', pady=(60, 30), padx=90)
+
+root.mainloop()
