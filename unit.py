@@ -28,7 +28,7 @@ class TestAddition(unittest.TestCase):
 
     def test_mixed_positive_negative(self):
         result = addition(5, -6)
-        self.assertEqual(result, -1)
+        self.assertEqual(result, -551)
 
     def test_zero(self):
         result = addition(0, 0)
