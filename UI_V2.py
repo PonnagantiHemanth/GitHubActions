@@ -187,27 +187,27 @@ def search_url(branch_name):
             sign_in_button.click()
 
             # Add a delay for the sign-in process
-            time.sleep(5)
+            time.sleep(3)
 
             # Click the "Actions" tab again
             actions_tab_element = driver.find_element(By.ID, 'actions-tab')
             actions_tab_element.click()
-            time.sleep(5)  # Add a delay for the tab switch to complete
+            time.sleep(3)  # Add a delay for the tab switch to complete
 
             # Click the "Run Tests" link
             run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
             run_tests_link.click()
-            time.sleep(5)  # Add a delay for the new page to load
+            time.sleep(3)  # Add a delay for the new page to load
 
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
             run_workflow_button.click()
-            time.sleep(5)  # Add a delay for the action to complete
+            time.sleep(3)  # Add a delay for the action to complete
 
             # Click the "Branch" dropdown using CSS selector
             branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]')
             branch_dropdown.click()
-            time.sleep(5)  # Add a delay for the dropdown to open
+            time.sleep(3)  # Add a delay for the dropdown to open
 
             # Enter the branch name in the input field
             branch_input = driver.find_element(By.ID, 'context-commitish-filter-field')
@@ -216,7 +216,7 @@ def search_url(branch_name):
 
             # Press Enter to confirm the branch selection
             branch_input.send_keys(Keys.RETURN)
-            time.sleep(5)  # Add a delay for the branch selection to be applied
+            time.sleep(3)  # Add a delay for the branch selection to be applied
 
             # Click the "Run workflow" button
             run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
@@ -294,7 +294,7 @@ tk.Label(root, text="", bg="white").grid(row=3, column=2)
 
 # Create a frame to contain both selected tests and the additional box
 combined_frame = tk.Frame(root, bg="white")
-combined_frame.grid(row=2, column=2, rowspan=2, padx=20, pady=(0, 20), sticky="w")  # Anchor the frame to the left side
+combined_frame.grid(row=2, column=3, rowspan=10, padx=10, pady=(0, 10), sticky="w")  # Anchor the frame to the left side
 
 # Create a frame for the selected test listbox with initial padding
 selected_test_frame = tk.Frame(combined_frame, highlightthickness=0, bg="white")
@@ -318,12 +318,14 @@ selected_test_scrollbar.config(command=selected_test_listbox.yview)  # Connect s
 selected_test_listbox.config(yscrollcommand=selected_test_scrollbar.set)
 
 # Create a frame for the additional box below the selected tests
+# Create a frame for the additional box below the selected tests
 additional_frame = tk.Frame(combined_frame, bg="white")
-additional_frame.pack(fill=tk.BOTH, expand=True, pady=(200, 0), padx=20)  # Add padding here
+additional_frame.pack(fill=tk.BOTH, expand=True, pady=(200, 300), padx=20)  # Adjusted padding here
+
 
 # Create a label for the additional box
 device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
-device_name_label_1.grid(row=0, column=0, sticky="w", padx=20)
+device_name_label_1.grid(row=0, column=0, sticky="s", padx=20)
 
 # Create a Combobox for device name 1 inside the additional  box
 device_name_values = ["Mouse", "Keyboard", "Drifter"]
@@ -351,13 +353,13 @@ device_combobox_3.grid(row=1, column=1, padx=(10, 0), pady=(20, 5), sticky="w")
 device_combobox_3.current(0)  # Set the default selection
 
 
-username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 12))
+username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 14))
 username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
 
 username_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID)
 username_entry.grid(row=2, column=1, pady=(20, 5), padx=20, sticky='w')
 
-password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 12))
+password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 14))
 password_label.grid(row=2, column=2, pady=(10, 5), padx=20, sticky='e')
 
 password_entry = tk.Entry(additional_frame, width=30, font=("Helvetica", 10), bd=2, relief=tk.SOLID, show='*')
@@ -368,7 +370,7 @@ button = tk.Button(root, text="Start Test", command=start_test, activebackground
                    font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
                    highlightthickness=2, justify="center", overrelief="raised", padx=10, pady=5, width=15,
                    wraplength=100)
-button.grid(row=4, column=2, padx=3, pady=10, sticky="s")
+button.grid(row=3, column=2, pady=10, sticky="s", columnspan=2)
 # Add horizontal lines
 #horizontal_line1 = ttk.Separator(root, orient='horizontal')
 #horizontal_line1.grid(row=1, column=1, columnspan=10, sticky='ew', pady=(60, 30), padx=90)
