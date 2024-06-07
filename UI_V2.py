@@ -167,14 +167,14 @@ def search_url(branch_name):
             )
 
             # Fill the username field
-            username_field.send_keys(username_entry.get())
+            #username_field.send_keys(username_entry.get())
 
             # Add a delay to allow the username to be filled
-            time.sleep(2)
+            time.sleep(60)
 
             # Find and fill the password field
-            password_field = driver.find_element(By.ID, "password")
-            password_field.send_keys(password_entry.get())  # Use the password from entry
+            #password_field = driver.find_element(By.ID, "password")
+            #password_field.send_keys(password_entry.get())  # Use the password from entry
 
             # Wait for the sign in button to be clickable
             sign_in_button = WebDriverWait(driver, 10).until(
