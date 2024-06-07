@@ -292,7 +292,7 @@ tk.Label(root, text="", bg="white").grid(row=3, column=2)
 
 # Create a frame to contain both selected tests and the additional box
 combined_frame = tk.Frame(root, bg="white")
-combined_frame.grid(row=2, column=6, rowspan=20, padx=10, pady=(0, 20), sticky="ws")  # Anchor the frame to the left side
+combined_frame.grid(row=3, column=6, rowspan=20, padx=10, pady=(0, 20), sticky="ws")  # Anchor the frame to the left side
 
 # Create a frame for the selected test listbox with initial padding
 selected_test_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
