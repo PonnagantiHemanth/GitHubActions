@@ -172,7 +172,7 @@ def search_url(branch_name):
             # username_field.send_keys(username_entry.get())
 
             # Add a delay to allow the username to be filled
-            time.sleep(120)
+            time.sleep(30)
 
             # Find and fill the password field
             # password_field = driver.find_element(By.ID, "password")
