@@ -107,7 +107,6 @@ def start_test():
     # Create a temporary branch name based on current time
     timestamp = int(time.time())
     branch_name = combobox.get() + device_entry_2.get() + device_combobox_3.get()
-    # branch_name = device_name_values.get() + device_entry_2.get() + device_combobox_3.get()
 
     # Initialize a Git repository in the current directory
     subprocess.run(["git", "init"])
@@ -156,73 +155,26 @@ def search_url(branch_name):
 
         time.sleep(3)  # Adjust the wait time as needed
 
-        actions_tab_element = driver.find_element(By.ID, 'actions-tab')
-        actions_tab_element.click()
-
-        time.sleep(3)
-
         try:
-            driver.execute_script("document.querySelector('a[href^=\"/login?\"]').click();")
-
-            username_field = WebDriverWait(driver, 10).until(
-                EC.visibility_of_element_located((By.ID, "login_field"))
+            # Click the login button
+            login_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, "btn-primary"))
             )
+            login_button.click()
 
-            # Fill the username field
-            # username_field.send_keys(username_entry.get())
-
-            # Add a delay to allow the username to be filled
-            time.sleep(30)
-
-            # Find and fill the password field
-            # password_field = driver.find_element(By.ID, "password")
-            # password_field.send_keys(password_entry.get())  # Use the password from entry
-
-            # Wait for the sign in button to be clickable
-            #sign_in_button = WebDriverWait(driver, 10).until(
-            #    EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
-            #)
-
-            # Click the sign in button
-            #sign_in_button.click()
-
-            # Add a delay for the sign-in process
-            #time.sleep(3)
-
-            # Click the "Actions" tab again
-            actions_tab_element = driver.find_element(By.ID, 'actions-tab')
+            # Wait for the "Actions" tab to be clickable again after login
+            actions_tab_element = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, 'actions-tab'))
+            )
             actions_tab_element.click()
-            time.sleep(3)  # Add a delay for the tab switch to complete
 
-            # Click the "Run Tests" link
-            run_tests_link = driver.find_element(By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]')
+            # Wait for the "Run Tests" link to be clickable
+            run_tests_link = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[contains(@href, "/actions/workflows/actions.yml")]'))
+            )
             run_tests_link.click()
-            time.sleep(3)  # Add a delay for the new page to load
 
-            # Click the "Run workflow" button
-            run_workflow_button = driver.find_element(By.XPATH, '//summary[contains(text(), "Run workflow")]')
-            run_workflow_button.click()
-            time.sleep(3)  # Add a delay for the action to complete
-
-            # Click the "Branch" dropdown using CSS selector
-            branch_dropdown = driver.find_element(By.CSS_SELECTOR,
-                                                  'summary[data-view-component="true"] span[data-menu-button]')
-            branch_dropdown.click()
-            time.sleep(3)  # Add a delay for the dropdown to open
-
-            # Enter the branch name in the input field
-            branch_input = driver.find_element(By.ID, 'context-commitish-filter-field')
-            branch_input.send_keys(branch_name)
-            time.sleep(2)  # Add a delay for the branch name to be entered
-
-            # Press Enter to confirm the branch selection
-            branch_input.send_keys(Keys.RETURN)
-            time.sleep(3)  # Add a delay for the branch selection to be applied
-
-            # Click the "Run workflow" button
-            run_workflow_button = driver.find_element(By.XPATH, '//button[contains(text(), "Run workflow")]')
-            run_workflow_button.click()
-            time.sleep(50)  # Add a delay for the action to complete
+            # You can continue with the rest of the code here
 
         except Exception as e:
             print("Failed to click the buttons:", e)
@@ -267,11 +219,10 @@ def display_popup(event):
         messagebox.showinfo("Information", "The device is currently in use. Please select another device")
         device_combobox_3.current(0)  # Reset the combobox selection to its initial state
 
-    # Reset the combobox selection to its initial state
+
 # Set up the main application window
 root = tk.Tk()
 root.title("Scroll Bar")
-# root.attributes("-topmost", True)
 root.configure(bg="white")  # Set background color
 root.geometry("1350x900")
 
@@ -288,8 +239,7 @@ dropdown_values = ["Mouse", "Keyboard"]
 combobox = ttk.Combobox(root, values=dropdown_values, state="readonly")
 combobox.grid(row=1, column=1, padx=20, pady=(0, 10), sticky="w")
 combobox.current(0)  # Set the default selection
-# heading_label = tk.Label(root, text="Test Features", font=("Helvetica", 16), padx=20, pady=10, bg="white")
-# heading_label.grid(row=2, column=1, columnspan=2, sticky="w")
+
 # Bind the combobox selection event to update the test list
 combobox.bind("<<ComboboxSelected>>", update_tests)
 
@@ -305,7 +255,6 @@ listbox.pack(side=tk.LEFT, expand=False)
 listbox.bind("<<ListboxSelect>>", display_selected_test)
 
 # Create a scrollbar for the listbox
-# Create a scrollbar for the listbox
 scrollbar = tk.Scrollbar(listboxes_frame, orient=tk.VERTICAL)
 scrollbar.pack(side=tk.LEFT, fill=tk.Y)
 scrollbar.config(command=listbox.yview)
@@ -320,8 +269,7 @@ tk.Label(root, text="", bg="white").grid(row=3, column=2)
 
 # Create a frame to contain both selected tests and the additional box
 combined_frame = tk.Frame(root, bg="white")
-combined_frame.grid(row=3, column=6, rowspan=20, padx=10, pady=(0, 20),
-                    sticky="ws")  # Anchor the frame to the left side
+combined_frame.grid(row=3, column=6, rowspan=20, padx=10, pady=(0, 20), sticky="ws")  # Anchor the frame to the left side
 
 # Create a frame for the selected test listbox with initial padding
 selected_test_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
@@ -358,7 +306,7 @@ device_combobox_1.current(0)  # Set the default selection
 
 # Create another label for the additional box
 device_name_label_2 = tk.Label(additional_frame, text="Patch_No:-", font=("Helvetica", 14), bg="white")
-device_name_label_2.grid(row=0, column=2,padx=(30, 10), pady=(8, 5), sticky="w")
+device_name_label_2.grid(row=0, column=2, padx=(30, 10), pady=(8, 5), sticky="w")
 
 # Create an Entry box for device name 2 inside the additional box
 device_entry_2 = tk.Entry(additional_frame, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
@@ -377,30 +325,8 @@ device_combobox_3.current(0)  # Set the default selection
 # Bind event to display a popup message when Kosmos2 is selected
 device_combobox_3.bind("<<ComboboxSelected>>", display_popup)
 
-#username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 14))
-#username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
-
-#username_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
-#username_entry.grid(row=2, column=1, pady=(20, 5), padx=20, sticky='w')
-
-#password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 14))
-#password_label.grid(row=2, column=2, pady=(10, 5), padx=20, sticky='e')
-
-#password_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID, show='*')
-#password_entry.grid(row=2, column=3, pady=(10, 5), padx=20, sticky='ws')
-
 button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
-                   anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
-                   font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
-                   highlightthickness=2, justify="center", overrelief="raised", padx=10, pady=5, width=15,
-                   wraplength=100)
-# Adjust the row and column placement of widgets to maintain consistent alignment
-button.grid(row=3, column=5, pady=5, sticky="s", columnspan=2)
-# Add horizontal lines
-# horizontal_line1 = ttk.Separator(root, orient='horizontal')
-# horizontal_line1.grid(row=1, column=1, columnspan=10, sticky='ew', pady=(60, 30), padx=90)
-
-# Bind double-click event to delete selected test
-selected_test_listbox.bind("<Double-Button-1>", delete_selected_test)
+                   anchor="center", bd=3, bg="white", cursor="hand2")
+button.grid(row=5, column=6, padx=(30, 100))
 
 root.mainloop()
