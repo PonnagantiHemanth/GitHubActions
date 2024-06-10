@@ -172,7 +172,7 @@ def search_url(branch_name):
             # username_field.send_keys(username_entry.get())
 
             # Add a delay to allow the username to be filled
-            time.sleep(20)
+            time.sleep(30)
 
             # Find and fill the password field
             # password_field = driver.find_element(By.ID, "password")
@@ -344,7 +344,7 @@ selected_test_listbox.config(yscrollcommand=selected_test_scrollbar.set)
 
 # Create a frame for the additional box below the selected tests
 additional_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
-additional_frame.pack(fill=tk.BOTH, expand=True, pady=(100, 100), padx=180)  # Adjusted padding here
+additional_frame.pack(fill=tk.BOTH, expand=True, pady=(100, 80), padx=170)  # Adjusted padding here
 
 # Create a label for the additional box
 device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
