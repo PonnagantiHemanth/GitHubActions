@@ -389,7 +389,7 @@ device_combobox_3.bind("<<ComboboxSelected>>", display_popup)
 #password_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID, show='*')
 #password_entry.grid(row=2, column=3, pady=(10, 5), padx=20, sticky='ws')
 
-button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
+button = tk.Button(root, text="Sign in & Start Test", command=start_test, activebackground="green", activeforeground="white",
                    anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
                    font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
                    highlightthickness=2, justify="center", overrelief="raised", padx=10, pady=5, width=15,
