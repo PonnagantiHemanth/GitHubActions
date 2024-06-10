@@ -13,6 +13,7 @@ import time
 
 selected_tests = []
 
+
 # Function to display the test names
 def display_test_names(option):
     # Clear the listbox
@@ -80,7 +81,8 @@ def display_selected_test(event):
         selected_test_listbox.insert(tk.END, test_name)
 
     # Apply a border around the selected test listbox
-    selected_test_frame.config(highlightbackground="black", highlightcolor="black", highlightthickness=2, padx=10, pady=10)
+    selected_test_frame.config(highlightbackground="black", highlightcolor="black", highlightthickness=2, padx=10,
+                               pady=10)
 
     # Write selected tests to file
     write_selected_tests_to_file()
@@ -167,14 +169,14 @@ def search_url(branch_name):
             )
 
             # Fill the username field
-            #username_field.send_keys(username_entry.get())
+            # username_field.send_keys(username_entry.get())
 
             # Add a delay to allow the username to be filled
             time.sleep(60)
 
             # Find and fill the password field
-            #password_field = driver.find_element(By.ID, "password")
-            #password_field.send_keys(password_entry.get())  # Use the password from entry
+            # password_field = driver.find_element(By.ID, "password")
+            # password_field.send_keys(password_entry.get())  # Use the password from entry
 
             # Wait for the sign in button to be clickable
             sign_in_button = WebDriverWait(driver, 10).until(
@@ -203,7 +205,8 @@ def search_url(branch_name):
             time.sleep(3)  # Add a delay for the action to complete
 
             # Click the "Branch" dropdown using CSS selector
-            branch_dropdown = driver.find_element(By.CSS_SELECTOR, 'summary[data-view-component="true"] span[data-menu-button]')
+            branch_dropdown = driver.find_element(By.CSS_SELECTOR,
+                                                  'summary[data-view-component="true"] span[data-menu-button]')
             branch_dropdown.click()
             time.sleep(3)  # Add a delay for the dropdown to open
 
@@ -240,6 +243,24 @@ def delete_branch(branch_name):
     subprocess.run(["git", "push", "origin", "--delete", branch_name])
     print("Branch deleted")
 
+
+# Function to delete selected test from the selected test listbox and list
+def delete_selected_test(event):
+    # Check if any item is selected
+    if selected_test_listbox.curselection():
+        # Get the index of the selected item
+        index = selected_test_listbox.curselection()[0]
+
+        # Remove the selected test from the listbox
+        selected_test_listbox.delete(index)
+
+        # Remove the selected test from the selected_tests list
+        selected_tests.pop(index)
+
+        # Write updated selected tests to file
+        write_selected_tests_to_file()
+
+
 # Set up the main application window
 root = tk.Tk()
 root.title("Scroll Bar")
@@ -260,8 +281,8 @@ dropdown_values = ["Mouse", "Keyboard"]
 combobox = ttk.Combobox(root, values=dropdown_values, state="readonly")
 combobox.grid(row=1, column=1, padx=20, pady=(0, 10), sticky="w")
 combobox.current(0)  # Set the default selection
-#heading_label = tk.Label(root, text="Test Features", font=("Helvetica", 16), padx=20, pady=10, bg="white")
-#heading_label.grid(row=2, column=1, columnspan=2, sticky="w")
+# heading_label = tk.Label(root, text="Test Features", font=("Helvetica", 16), padx=20, pady=10, bg="white")
+# heading_label.grid(row=2, column=1, columnspan=2, sticky="w")
 # Bind the combobox selection event to update the test list
 combobox.bind("<<ComboboxSelected>>", update_tests)
 
@@ -292,7 +313,8 @@ tk.Label(root, text="", bg="white").grid(row=3, column=2)
 
 # Create a frame to contain both selected tests and the additional box
 combined_frame = tk.Frame(root, bg="white")
-combined_frame.grid(row=3, column=6, rowspan=20, padx=10, pady=(0, 20), sticky="ws")  # Anchor the frame to the left side
+combined_frame.grid(row=3, column=6, rowspan=20, padx=10, pady=(0, 20),
+                    sticky="ws")  # Anchor the frame to the left side
 
 # Create a frame for the selected test listbox with initial padding
 selected_test_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
@@ -316,7 +338,6 @@ selected_test_listbox.config(yscrollcommand=selected_test_scrollbar.set)
 # Create a frame for the additional box below the selected tests
 additional_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
 additional_frame.pack(fill=tk.BOTH, expand=True, pady=(70, 100), padx=20)  # Adjusted padding here
-
 
 # Create a label for the additional box
 device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
@@ -346,7 +367,6 @@ device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, s
 device_combobox_3.grid(row=1, column=1, padx=(10, 0), pady=(20, 5), sticky="w")
 device_combobox_3.current(0)  # Set the default selection
 
-
 username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 14))
 username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
 
@@ -359,7 +379,6 @@ password_label.grid(row=2, column=2, pady=(10, 5), padx=20, sticky='e')
 password_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID, show='*')
 password_entry.grid(row=2, column=3, pady=(10, 5), padx=20, sticky='ws')
 
-
 button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
                    anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
                    font=("Arial", 8), height=1, highlightbackground="black", highlightcolor="green",
@@ -368,7 +387,10 @@ button = tk.Button(root, text="Start Test", command=start_test, activebackground
 # Adjust the row and column placement of widgets to maintain consistent alignment
 button.grid(row=3, column=5, pady=5, sticky="s", columnspan=2)
 # Add horizontal lines
-#horizontal_line1 = ttk.Separator(root, orient='horizontal')
-#horizontal_line1.grid(row=1, column=1, columnspan=10, sticky='ew', pady=(60, 30), padx=90)
+# horizontal_line1 = ttk.Separator(root, orient='horizontal')
+# horizontal_line1.grid(row=1, column=1, columnspan=10, sticky='ew', pady=(60, 30), padx=90)
+
+# Bind double-click event to delete selected test
+selected_test_listbox.bind("<Double-Button-1>", delete_selected_test)
 
 root.mainloop()
