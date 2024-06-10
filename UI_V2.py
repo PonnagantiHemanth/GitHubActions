@@ -179,15 +179,15 @@ def search_url(branch_name):
             # password_field.send_keys(password_entry.get())  # Use the password from entry
 
             # Wait for the sign in button to be clickable
-            sign_in_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
-            )
+            #sign_in_button = WebDriverWait(driver, 10).until(
+            #    EC.element_to_be_clickable((By.CLASS_NAME, "js-sign-in-button"))
+            #)
 
             # Click the sign in button
-            sign_in_button.click()
+            #sign_in_button.click()
 
             # Add a delay for the sign-in process
-            time.sleep(3)
+            #time.sleep(3)
 
             # Click the "Actions" tab again
             actions_tab_element = driver.find_element(By.ID, 'actions-tab')
@@ -263,11 +263,11 @@ def delete_selected_test(event):
 
 # Function to display a popup message when Kosmos2 is selected
 def display_popup(event):
-    if device_combobox_3.get() == "Kosmos2":
-        messagebox.showinfo("Information", "The device is currently in use. Please select an alternative device..")
+    if (device_combobox_3.get() == "Kosmos2") or device_combobox_3.get() == "Kosmos3":
+        messagebox.showinfo("Information", "The device is currently in use. Please select another device")
         device_combobox_3.current(0)  # Reset the combobox selection to its initial state
 
-
+    # Reset the combobox selection to its initial state
 # Set up the main application window
 root = tk.Tk()
 root.title("Scroll Bar")
