@@ -261,6 +261,13 @@ def delete_selected_test(event):
         write_selected_tests_to_file()
 
 
+# Function to display a popup message when Kosmos2 is selected
+def display_popup(event):
+    if device_combobox_3.get() == "Kosmos2":
+        messagebox.showinfo("Information", "The device is currently in use. Please select an alternative device..")
+        device_combobox_3.current(0)  # Reset the combobox selection to its initial state
+
+
 # Set up the main application window
 root = tk.Tk()
 root.title("Scroll Bar")
@@ -362,10 +369,13 @@ device_name_label_3 = tk.Label(additional_frame, text="Test Bed:-", font=("Helve
 device_name_label_3.grid(row=1, column=0, sticky="s", padx=10, pady=(20, 5))
 
 # Create a Combobox for device name 3 inside the additional box
-device_name_values2 = ["Kosmos", "OtherDevices"]
+device_name_values2 = ["Kosmos1", "Kosmos2", "Kosmos3", "Kosmos4", "OtherDevices"]
 device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
 device_combobox_3.grid(row=1, column=1, padx=(10, 0), pady=(20, 5), sticky="w")
 device_combobox_3.current(0)  # Set the default selection
+
+# Bind event to display a popup message when Kosmos2 is selected
+device_combobox_3.bind("<<ComboboxSelected>>", display_popup)
 
 username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 14))
 username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
