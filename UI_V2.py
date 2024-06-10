@@ -172,7 +172,7 @@ def search_url(branch_name):
             # username_field.send_keys(username_entry.get())
 
             # Add a delay to allow the username to be filled
-            time.sleep(60)
+            time.sleep(120)
 
             # Find and fill the password field
             # password_field = driver.find_element(By.ID, "password")
@@ -344,7 +344,7 @@ selected_test_listbox.config(yscrollcommand=selected_test_scrollbar.set)
 
 # Create a frame for the additional box below the selected tests
 additional_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
-additional_frame.pack(fill=tk.BOTH, expand=True, pady=(70, 100), padx=20)  # Adjusted padding here
+additional_frame.pack(fill=tk.BOTH, expand=True, pady=(100, 100), padx=180)  # Adjusted padding here
 
 # Create a label for the additional box
 device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
@@ -358,7 +358,7 @@ device_combobox_1.current(0)  # Set the default selection
 
 # Create another label for the additional box
 device_name_label_2 = tk.Label(additional_frame, text="Patch_No:-", font=("Helvetica", 14), bg="white")
-device_name_label_2.grid(row=0, column=2, sticky="s")
+device_name_label_2.grid(row=0, column=2,padx=(30, 10), pady=(8, 5), sticky="w")
 
 # Create an Entry box for device name 2 inside the additional box
 device_entry_2 = tk.Entry(additional_frame, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
@@ -366,28 +366,28 @@ device_entry_2.grid(row=0, column=3, padx=(0, 10), pady=(8, 5), sticky="w")  # A
 
 # Create another label for the additional box
 device_name_label_3 = tk.Label(additional_frame, text="Test Bed:-", font=("Helvetica", 14), bg="white")
-device_name_label_3.grid(row=1, column=0, sticky="s", padx=10, pady=(20, 5))
+device_name_label_3.grid(row=1, column=2, padx=(20, 50), pady=(35, 5), sticky="w")
 
 # Create a Combobox for device name 3 inside the additional box
 device_name_values2 = ["Kosmos1", "Kosmos2", "Kosmos3", "Kosmos4", "OtherDevices"]
 device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
-device_combobox_3.grid(row=1, column=1, padx=(10, 0), pady=(20, 5), sticky="w")
+device_combobox_3.grid(row=1, column=3, padx=(0, 0), pady=(10, 0), sticky="")
 device_combobox_3.current(0)  # Set the default selection
 
 # Bind event to display a popup message when Kosmos2 is selected
 device_combobox_3.bind("<<ComboboxSelected>>", display_popup)
 
-username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 14))
-username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
+#username_label = tk.Label(additional_frame, text="GitHub Username:", bg="white", font=("Helvetica", 14))
+#username_label.grid(row=2, column=0, pady=(20, 5), padx=20, sticky='w')
 
-username_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
-username_entry.grid(row=2, column=1, pady=(20, 5), padx=20, sticky='w')
+#username_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID)
+#username_entry.grid(row=2, column=1, pady=(20, 5), padx=20, sticky='w')
 
-password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 14))
-password_label.grid(row=2, column=2, pady=(10, 5), padx=20, sticky='e')
+#password_label = tk.Label(additional_frame, text="GitHub Password:", bg="white", font=("Helvetica", 14))
+#password_label.grid(row=2, column=2, pady=(10, 5), padx=20, sticky='e')
 
-password_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID, show='*')
-password_entry.grid(row=2, column=3, pady=(10, 5), padx=20, sticky='ws')
+#password_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID, show='*')
+#password_entry.grid(row=2, column=3, pady=(10, 5), padx=20, sticky='ws')
 
 button = tk.Button(root, text="Start Test", command=start_test, activebackground="green", activeforeground="white",
                    anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
