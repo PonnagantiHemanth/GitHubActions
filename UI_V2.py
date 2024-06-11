@@ -118,7 +118,7 @@ def start_test():
     # Commit changes
     subprocess.run(["git", "commit", "-m", "Initial commit"])
 
-    # Check if the remote already exists
+    # Check if the remote already
     remote_output = subprocess.run(["git", "remote"], capture_output=True, text=True)
     if "origin" not in remote_output.stdout.splitlines():
         # Add the remote only if it doesn't already exist
