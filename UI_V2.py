@@ -10,7 +10,8 @@ from selenium.webdriver.common.keys import Keys
 import subprocess
 import os
 import time
-
+chrome_options = Options()
+chrome_options.add_argument("--headless")
 selected_tests = []
 
 
