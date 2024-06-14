@@ -389,6 +389,15 @@ device_combobox_3.bind("<<ComboboxSelected>>", display_popup)
 
 #password_entry = tk.Entry(additional_frame, width=25, font=("Helvetica", 14), bd=2, relief=tk.SOLID, show='*')
 #password_entry.grid(row=2, column=3, pady=(10, 5), padx=20, sticky='ws')
+# Create a label below the additional box
+# Create a frame for the additional label
+additional_label_frame = tk.Frame(root, bg="white")
+additional_label_frame.grid(row=3, column=6, columnspan=2, pady=(100, 0))
+
+# Create the label "ththt"
+additional_label = tk.Label(additional_label_frame, text="Branch Creation", font=("Helvetica", 20), bg="white")
+additional_label.pack()
+
 
 button = tk.Button(root, text="Sign in & Start Test", command=start_test, activebackground="green", activeforeground="white",
                    anchor="center", bd=3, bg="white", cursor="hand2", disabledforeground="green", fg="green",
