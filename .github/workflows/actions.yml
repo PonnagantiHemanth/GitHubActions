@@ -30,11 +30,14 @@ jobs:
           pytest --junit-xml=results.xml || true
         continue-on-error: true
 
+      - name: Install xmllint
+        run: sudo apt-get install -y libxml2-utils
+
       - name: Display failed test names
         if: failure()
         run: |
           echo "Failed tests:"
-          grep '<testcase classname=' results.xml | grep '<failure' | awk -F'"' '{print $4}'
+          xmllint --xpath '//testcase[failure]/@name' results.xml
 
       - name: Archive test results
         if: always()
