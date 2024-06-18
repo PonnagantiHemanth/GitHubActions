@@ -2,6 +2,7 @@ name: Run Tests
 
 on:
   workflow_dispatch:
+    inputs:
   push:
     branches:
       - main
@@ -14,33 +15,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'  # Specify your Python version
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-
-      - name: Read test names from testfilter.txt
-        id: read_test_names
-        run: |
-          echo "Reading test names from testfilter.txt"
-          cat testfilter.txt
-
-      - name: Run tests and capture results
-        id: run_tests
-        run: |
-          # Assuming your test runner uses a way to filter tests by name
-          # Replace with your actual command to run tests, passing test names
-          # Adjust this command based on how your test framework handles test filtering
-          pytest --verbose --junit-xml=test-results.xml --filter-tests $(cat testfilter.txt) || echo "Tests failed"
-
-      - name: Display test results
-        if: always()
-        run: |
-          echo "Displaying test results:"
-          ls -l  # List files in the current directory for troubleshooting
-          cat test-results.xml || echo "No test-results.xml found"
+      - name: python main.py
+        run: python main.py
