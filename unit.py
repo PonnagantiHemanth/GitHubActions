@@ -20,7 +20,7 @@ class TestAddition(unittest.TestCase):
     def test_positive(self):
         print("positive")
         result = addition(5, 6)
-        self.assertEqual(result, 11)
+        self.assertEqual(result, 1111111)
 
     def test_negative(self):
         result = addition(-5, -6)
