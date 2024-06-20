@@ -347,7 +347,7 @@ device_name_label_1.grid(row=0, column=0, sticky="s", padx=20,pady=10)
 device_name_values = ["Sanak", "Keyboard", "Drifter"]
 device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly")
 device_combobox_1.grid(row=0, column=1, padx=(10, 0), pady=(8, 5), sticky="w")  # Added padding pady=(8, 5)
-device_combobox_1.current(0)  # Set the default selection
+#device_combobox_1.current(0)  # Set the default selection
 
 # Create another label for the additional box
 device_name_label_2 = tk.Label(additional_frame, text="Patch_No:-", font=("Helvetica", 14), bg="white")
