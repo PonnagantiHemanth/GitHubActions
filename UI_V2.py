@@ -38,26 +38,16 @@ def display_test_names(option):
         ]
     elif option == "Keyboard":
         test_names = [
-            "test_fibonacci_5",
-            "test_string_concatenation",
-            "test_list_concatenation",
-            "test_tuple_concatenation",
-            "test_invalid_input",
-            "test_string_concatenation",
-            "test_list_concatenation",
-            "test_tuple_concatenation",
-            "test_invalid_input",
-            "test_string_concatenation",
-            "test_list_concatenation",
-            "test_tuple_concatenation",
-            "test_invalid_input",
-            "test_string_concatenation",
-            "test_list_concatenation",
-            "test_tuple_concatenation",
-            "test_invalid_input",
-            "test_string_concatenation",
-            "test_list_concatenation",
-            "test_tuple_concatenation"
+            "test_11x007",
+            "test_10x005",
+            "test_7x007",
+            "test_3x004",
+            "test_6x004",
+            "test_2x007",
+            "test_4x008",
+            "test_8x007",
+            "test_9x009",
+            "test_2x007",
         ]
 
     # Insert test names into the listbox
@@ -266,7 +256,7 @@ def delete_selected_test(event):
 
 # Function to display a popup message when Kosmos2 is selected
 def display_popup(event):
-    if (device_combobox_3.get() == "Kosmos2") or device_combobox_3.get() == "Kosmos3":
+    if (device_combobox_3.get() == "Kosmos2_Cortado") or device_combobox_3.get() == "Kosmos3_Drifter":
         messagebox.showinfo("Information", "The device is currently in use. Please select another device")
         device_combobox_3.current(0)  # Reset the combobox selection to its initial state
 
@@ -372,10 +362,10 @@ device_name_label_3 = tk.Label(additional_frame, text="Test Bed:-", font=("Helve
 device_name_label_3.grid(row=1, column=2, padx=(10, 60), pady=(35, 30), sticky="w")
 
 # Create a Combobox for device name 3 inside the additional box
-device_name_values2 = ["Kosmos1_slimPlus", "Kosmos2", "Kosmos3", "Kosmos4", "OtherDevices"]
+device_name_values2 = ["Kosmos1_slimPlus", "Kosmos2_Cortado", "Kosmos3_Drifter", "Kosmos4_Lexend"]
 device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
 device_combobox_3.grid(row=1, column=3, padx=(5, 10), pady=(10, 0), sticky="w")
-device_combobox_3.current(0)  # Set the default selection
+#device_combobox_3.current(0)  # Set the default selection
 
 # Bind event to display a popup message when Kosmos2 is selected
 device_combobox_3.bind("<<ComboboxSelected>>", display_popup)
