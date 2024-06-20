@@ -352,7 +352,7 @@ device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("H
 device_name_label_1.grid(row=0, column=0, sticky="s", padx=20)
 
 # Create a Combobox for device name 1 inside the additional  box
-device_name_values = ["Mouse", "Keyboard", "Drifter"]
+device_name_values = ["Sanak", "Keyboard", "Drifter"]
 device_combobox_1 = ttk.Combobox(additional_frame, values=device_name_values, state="readonly")
 device_combobox_1.grid(row=0, column=1, padx=(10, 0), pady=(8, 5), sticky="w")  # Added padding pady=(8, 5)
 device_combobox_1.current(0)  # Set the default selection
