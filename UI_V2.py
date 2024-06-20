@@ -362,7 +362,7 @@ device_name_label_3 = tk.Label(additional_frame, text="Test Bed:-", font=("Helve
 device_name_label_3.grid(row=1, column=2, padx=(10, 60), pady=(35, 30), sticky="w")
 
 # Create a Combobox for device name 3 inside the additional box
-device_name_values2 = ["Kosmos1_Sanak","Kosmos2_slimPlus", "Kosmos3_Cortado", "Kosmos4_Drifter", "Kosmos5_Lexend"]
+device_name_values2 = ["Kosmos1_Sanak","Kosmos2_Cortado","Kosmos3_slimPlus", "Kosmos4_Drifter", "Kosmos5_Lexend"]
 device_combobox_3 = ttk.Combobox(additional_frame, values=device_name_values2, state="readonly")
 device_combobox_3.grid(row=1, column=3, padx=(5, 10), pady=(10, 0), sticky="w")
 #device_combobox_3.current(0)  # Set the default selection
