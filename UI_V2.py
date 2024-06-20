@@ -99,7 +99,7 @@ def start_test():
 
     # Create a temporary branch name based on current time
     timestamp = int(time.time())
-    branch_name = device_combobox_1.get() + device_entry_2.get() + device_combobox_3.get()
+    branch_name = device_combobox_1.get() + "/"+ device_entry_2.get() + "/" +device_combobox_3.get()
     # branch_name = device_name_values.get() + device_entry_2.get() + device_combobox_3.get()
 
     # Initialize a Git repository in the current directory
