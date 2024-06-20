@@ -24,15 +24,11 @@ def display_test_names(option):
     if option == "Mouse":
         test_names = [
             "test_1x009",
-            "test_negative",
-            "test_mixed_positive_negative",
-            "test_zero",
-            "test_large_numbers",
-            "test_decimal_numbers",
-            "test_string_concatenation",
-            "test_list_concatenation",
-            "test_tuple_concatenation",
-            "test_invalid_input"
+            "test_4x008",
+            "test_8x007",
+            "test_9x009",
+            "test_2x007",
+            ""
         ]
     elif option == "Keyboard":
         test_names = [

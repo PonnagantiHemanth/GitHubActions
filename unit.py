@@ -22,19 +22,19 @@ class TestAddition(unittest.TestCase):
         result = addition(5, 6)
         self.assertEqual(result, 1111111)
 
-    def test_negative(self):
+    def test_4x008(self):
         result = addition(-5, -6)
         self.assertEqual(result, -1111)
 
-    def test_mixed_positive_negative(self):
+    def test_8x007(self):
         result = addition(5, -6)
         self.assertEqual(result, -1)
 
-    def test_zero(self):
+    def test_9x009(self):
         result = addition(0, 0)
         self.assertEqual(result, 0)
 
-    def test_large_numbers(self):
+    def test_2x007(self):
         result = addition(1000000000, 2000000000)
         self.assertEqual(result, 3000000000)
 
