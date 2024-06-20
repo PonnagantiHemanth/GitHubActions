@@ -1,7 +1,7 @@
 import unittest
 
 
-def test_positive(self):
+def test_1x009(self):
     print("positive")
     result = addition(5, 6)
     self.assertEqual(result, 11)
@@ -17,7 +17,7 @@ def fibonacci(n):
 
 
 class TestAddition(unittest.TestCase):
-    def test_positive(self):
+    def test_1x009(self):
         print("positive")
         result = addition(5, 6)
         self.assertEqual(result, 1111111)
