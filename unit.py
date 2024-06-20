@@ -38,26 +38,26 @@ class TestAddition(unittest.TestCase):
         result = addition(1000000000, 2000000000)
         self.assertEqual(result, 3000000000)
 
-    def test_decimal_numbers(self):
+    def test_6x004(self):
         result = addition(3.5, 2.5)
         self.assertEqual(result, 6)
 
-    def test_string_concatenation(self):
+    def test_3x004(self):
         result = addition("Hello", "World")
         self.assertEqual(result, "HelloWorld")
 
-    def test_list_concatenation(self):
+    def test_7x007(self):
         result = addition([1, 2, 3], [4, 5, 6])
         self.assertEqual(result, [1, 2, 3, 4, 5, 6])
 
-    def test_tuple_concatenation(self):
+    def test_10x005(self):
         result = addition((1, 2), (3, 4))
         self.assertEqual(result, (1, 2, 3, 4))
 
-    def test_invalid_input(self):
+    def test_11x007(self):
         with self.assertRaises(TypeError):
             addition("Hello", 5)
 
-    def test_fibonacci_5(self):
+    def test_12x009(self):
         result = fibonacci(5)
         self.assertEqual(result, 5)

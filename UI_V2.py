@@ -28,7 +28,13 @@ def display_test_names(option):
             "test_8x007",
             "test_9x009",
             "test_2x007",
-            ""
+            "test_12x009",
+            "test_11x007",
+            "test_10x005",
+            "test_7x007",
+            "test_3x004",
+            "test_6x004",
+            "test_2x007"
         ]
     elif option == "Keyboard":
         test_names = [
