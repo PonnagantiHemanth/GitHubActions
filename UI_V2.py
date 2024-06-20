@@ -23,7 +23,7 @@ def display_test_names(option):
     # List test names based on the selected option
     if option == "Mouse":
         test_names = [
-            "test_positive",
+            "test_1x009",
             "test_negative",
             "test_mixed_positive_negative",
             "test_zero",
