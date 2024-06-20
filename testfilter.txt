@@ -1,1 +1,1 @@
-['test_10x005', 'test_6x004', 'test_2x007', 'test_4x008']
+['test_2x007', 'test_10x005']

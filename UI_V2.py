@@ -99,7 +99,7 @@ def start_test():
 
     # Create a temporary branch name based on current time
     timestamp = int(time.time())
-    branch_name = combobox.get() + device_entry_2.get() + device_combobox_3.get()
+    branch_name = device_combobox_1.get() + device_entry_2.get() + device_combobox_3.get()
     # branch_name = device_name_values.get() + device_entry_2.get() + device_combobox_3.get()
 
     # Initialize a Git repository in the current directory
@@ -340,8 +340,8 @@ additional_frame = tk.Frame(combined_frame, bg="white", bd=2, relief=tk.SOLID)
 additional_frame.pack(fill=tk.BOTH, expand=True, pady=(100, 80), padx=170)  # Adjusted padding here
 
 # Create a label for the additional box
-device_name_label_1 = tk.Label(additional_frame, text="Device Name 1:", font=("Helvetica", 14), bg="white")
-device_name_label_1.grid(row=0, column=0, sticky="s", padx=20)
+device_name_label_1 = tk.Label(additional_frame, text="Device Name:", font=("Helvetica", 14), bg="white")
+device_name_label_1.grid(row=0, column=0, sticky="s", padx=20,pady=10)
 
 # Create a Combobox for device name 1 inside the additional  box
 device_name_values = ["Sanak", "Keyboard", "Drifter"]
