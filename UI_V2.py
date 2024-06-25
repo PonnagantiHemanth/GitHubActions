@@ -220,6 +220,7 @@ def search_url(branch_name):
         except Exception as e:
             print("Failed to click the buttons:", e)
 
+
         # Close the ChromeDriver instance
         driver.quit()
 
