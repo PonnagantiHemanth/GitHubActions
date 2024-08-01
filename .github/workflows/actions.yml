@@ -1,10 +1,11 @@
 name: Run Tests
 
 on:
+  workflow_dispatch:
+    inputs:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   test:
@@ -14,29 +15,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'  # Replace with your Python version
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Replace with your dependencies if any
-
-      - name: Run tests and generate report
-        run: |
-          pytest --junitxml=pytest_report.xml  # Replace with your test command
-        continue-on-error: true
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test Results
-          path: pytest_report.xml
-
-      - name: Display test results
-        if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        with:
-          unit-test-result-files: 'pytest_report.xml'
+      - name: python main.py
+        run: python main.py
